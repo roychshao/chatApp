@@ -75,7 +75,7 @@ public class UserController {
         try (Session session = factory.openSession()) {
             
             session.beginTransaction();
-            session.save(newUser);
+            session.persist(newUser);
             session.getTransaction().commit();
             session.close();
 
@@ -114,7 +114,7 @@ public class UserController {
 
             session.beginTransaction();
             session.merge(deletedUser);
-            session.delete(deletedUser);
+            session.remove(deletedUser);
             session.getTransaction().commit();
             session.close();
 

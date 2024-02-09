@@ -21,11 +21,17 @@ public class Chatroom {
     public Chatroom() {
     }
 
-    public Chatroom(User[] usrs) {
+    public Chatroom(ArrayList<User> usrs) {
         setId(UUID.randomUUID().toString());
-        for (int i = 0; i < usrs.length; ++i) {
-            users.add(usrs[i]);
-        }
+        setUsers(usrs);
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<User> u) {
+        users = u;
     }
 
     public String getId() {
@@ -34,25 +40,5 @@ public class Chatroom {
 
     public void setId(String id) {
         roomId = id;
-    }
-
-    public void addUser(User usr) {
-        users.add(usr);
-    }
-
-    public void kickUser(User usr) {
-        for (int i = 0; i < users.size(); ++i) {
-            if (users.get(i).getId() == usr.getId()) {
-                users.remove(i);
-            }
-        }
-    }
-
-    public void leave(User usr) {
-        for (int i = 0; i < users.size(); ++i) {
-            if (users.get(i).getId() == usr.getId()) {
-                users.remove(i);
-            }
-        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.chatApp.domain;
 
 import java.util.UUID;
+import java.util.Date;
 import jakarta.persistence.*;
 import com.example.chatApp.domain.User;
 import com.example.chatApp.domain.Chatroom;
@@ -25,21 +26,24 @@ public class Message {
     @JoinColumn(name = "chatroomId", referencedColumnName = "roomId", nullable = false)
     private Chatroom chatroom;
 
+    private Date time;
+
     public Message () {
     }
 
-    public Message (String m, String f, String t) {
-        id = UUID.randomUUID().toString();
+    public Message (String m, User f, User t, Date d) {
+        messageId = UUID.randomUUID().toString();
         setContent(m);
         setFrom(f);
         setTo(t);
+        setTime(d);
     }
 
     public String getId() {
         return messageId;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         messageId = id;
     }
 
@@ -51,19 +55,27 @@ public class Message {
         this.content = str;
     }
 
-    public String getFrom() {
+    public User getFrom() {
         return fromUser;
     }
 
-    public void setFrom(String userId) {
-        fromUser = userId;
+    public void setFrom(User user) {
+        fromUser = user;
     }
 
-    public String getTo() {
+    public User getTo() {
         return toUser;
     }
 
-    public void setTo(String userId) {
-        toUser = userId;
+    public void setTo(User user) {
+        toUser = user;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date t) {
+        time = t;
     }
 }
