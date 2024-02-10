@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { user } from './../../types/user';
 import axios from "axios";
 
 const initialState = {
@@ -11,24 +12,22 @@ const initialState = {
     },
 };
 
-export const register:any = createAsyncThunk("user/register", async (userData: any) => {
-    const { name, age, gender, email, password } = userData;
-    const res = await axios.post("localhost:8080/api/user/register", {
-        name: name,
-        age: age,
-        gender: gender,
-        email: email,
-        password: password,
+export const register:any = createAsyncThunk("user/register", async (userData: user) => {
+    const res = await axios.post("http://localhost:8080/api/user/register", {
+        name: userData.name,
+        age: userData.age,
+        gender: userData.gender,
+        email: userData.email,
+        password: userData.password,
     },
     { withCredentials: true });
     return res.data;
 });
 
-export const signin:any = createAsyncThunk("user/signin", async (userData: any) => {
-    const { email, password } = userData;
-    const res = await axios.post("localhost:8080/api/user/signin", {
-        email: email,
-        password: password,
+export const signin:any = createAsyncThunk("user/signin", async (userData: user) => {
+    const res = await axios.post("http://localhost:8080/api/user/signin", {
+        email: userData.email,
+        password: userData.password,
     },
     { withCredentials: true });
     return res.data;
@@ -40,15 +39,15 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(register.fulfilled, (state:any, action:any) => {
-            state.profile = action.payload;
-        })
-        .addCase(signin.fulfilled, (state:any, action:any) => {
-            state.profile = {
-                ...state.profile,
-                id: action.payload.id,
-            }
-        })
+            .addCase(register.fulfilled, (state:any, action:any) => {
+                state.profile = action.payload;
+            })
+            .addCase(signin.fulfilled, (state:any, action:any) => {
+                state.profile = {
+                    ...state.profile,
+                    id: action.payload.id,
+                }
+            })
     },
 });
 

@@ -4,7 +4,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.chatApp.domain.Message;
 import com.example.chatApp.util.hibernateUtil;
 import org.hibernate.*;
@@ -26,14 +26,14 @@ public class SocketController {
         try (Session session = factory.openSession()) {
 
             session.beginTransaction();
-            session.save(msg);
+            session.persist(msg);
             session.getTransaction().commit();
             session.close();
 
             System.out.println("Message " + msg.getId() + " stored");
-            return msg;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return msg;
     }
 }

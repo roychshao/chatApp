@@ -1,13 +1,20 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { register } from './store/slice/userSlice'
+import { Routes, Route } from 'react-router-dom'
+import Signin from './pages/Signin/Signin';
+import Register from './pages/Register/Register';
 
 function App() {
 
-  return (
-    <>  
-    </>
-  )
+
+    return (
+        <>
+          <>
+            <Routes>
+              <Route path='/' element={<Signin />}/>
+              <Route path='/register' element={<Register />}/>
+            </Routes>
+          </>
+        </>
+    );
 }
 
 export default App
