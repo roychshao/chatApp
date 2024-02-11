@@ -1,7 +1,9 @@
 package com.example.chatApp.domain;
 
-import java.nio.channels.Pipe.SinkChannel;
-import java.rmi.StubNotFoundException;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.*;
 
@@ -17,6 +19,15 @@ public class User {
     private String password;
     private int age;
   
+    @ManyToMany(mappedBy = "users")
+    private Set<Chatroom> chatrooms = new HashSet<>();
+
+    @OneToMany(mappedBy = "fromUser")
+    private List<Message> messageFrom = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toUser")
+    private List<Message> messageTo = new ArrayList<>();
+
     public User() {
     }
 

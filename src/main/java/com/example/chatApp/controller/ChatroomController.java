@@ -1,33 +1,30 @@
 package com.example.chatApp.controller;
 
 import com.example.chatApp.domain.Chatroom;
-import com.example.chatApp.config.hibernateConfig;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.hibernate.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/api/chatroom")
 public class ChatroomController {
+    
+    @PersistenceContext
+    private EntityManager em;
 
-    private final SessionFactory factory;
-
-    @Autowired
-    public ChatroomController(SessionFactory factory) {
-        this.factory = factory;
+    public ChatroomController() {
     }
 
+    @Transactional
     @GetMapping("/{roomId}")
     public ResponseEntity<Chatroom> getChatroomById(@PathVariable String roomId) {
 
-        try (Session session = factory.openSession()) {
+        try {
 
-            session.beginTransaction();
-            Chatroom chatroom = session.get(Chatroom.class, roomId);
-            session.getTransaction().commit();
-            session.close();
+            Chatroom chatroom = em.find(Chatroom.class, roomId);
 
             if (chatroom != null) {
                 return ResponseEntity.ok(chatroom);
@@ -40,17 +37,15 @@ public class ChatroomController {
         }
     }
 
+    @Transactional
     @PostMapping("/create")
     public ResponseEntity<Chatroom> register(@RequestBody Chatroom createChatroom) {
         
         Chatroom newChatroom = new Chatroom(createChatroom.getUsers());
 
-        try (Session session = factory.openSession()) {
+        try {
             
-            session.beginTransaction();
-            session.persist(newChatroom);
-            session.getTransaction().commit();
-            session.close();
+            em.persist(newChatroom);
 
             System.out.println("Chatroom " + newChatroom.getId() + " created");
             return ResponseEntity.ok(newChatroom);
@@ -61,15 +56,13 @@ public class ChatroomController {
     }
 
 
+    @Transactional
     @PutMapping("/update")
     public ResponseEntity<Void> updateChatroom(@RequestBody Chatroom updatedChatroom) {
         
-        try (Session session = factory.openSession()) {
+        try {
             
-            session.beginTransaction();
-            session.merge(updatedChatroom);
-            session.getTransaction().commit();
-            session.close();
+            em.merge(updatedChatroom);
 
             System.out.println("Chatroom " + updatedChatroom.getId() + " updated");
         } catch (Exception e) {
@@ -80,16 +73,14 @@ public class ChatroomController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteChatroom(@RequestBody Chatroom deletedChatroom) {
 
-        try (Session session = factory.openSession()) {
+        try {
 
-            session.beginTransaction();
-            session.merge(deletedChatroom);
-            session.remove(deletedChatroom);
-            session.getTransaction().commit();
-            session.close();
+            em.merge(deletedChatroom);
+            em.remove(deletedChatroom);
 
             System.out.println("Chatroom " + deletedChatroom.getId() + " deleted");
         } catch (Exception e) {

@@ -3,8 +3,6 @@ package com.example.chatApp.domain;
 import java.util.UUID;
 import java.util.Date;
 import jakarta.persistence.*;
-import com.example.chatApp.domain.User;
-import com.example.chatApp.domain.Chatroom;
 
 @Entity
 @Table(name = "_Message")

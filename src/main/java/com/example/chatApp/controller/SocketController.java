@@ -4,32 +4,28 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.chatApp.domain.Message;
-import com.example.chatApp.config.hibernateConfig;
-import org.hibernate.*;
-
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @Controller
 public class SocketController {
 
-    private final SessionFactory factory;
+    @PersistenceContext
+    private EntityManager em;
 
-    @Autowired
-    public SocketController(SessionFactory factory) {
-        this.factory = factory;
+    public SocketController() {
     }
 
+    @Transactional
     @MessageMapping("/socket")
     @SendTo("/topic/{chatroomId}/messages")
     public Message messageHandler(@DestinationVariable String chatroomId, Message msg) {
         
-        try (Session session = factory.openSession()) {
+        try {
 
-            session.beginTransaction();
-            session.persist(msg);
-            session.getTransaction().commit();
-            session.close();
+            em.persist(msg);
 
             System.out.println("Message " + msg.getId() + " stored");
         } catch (Exception e) {
