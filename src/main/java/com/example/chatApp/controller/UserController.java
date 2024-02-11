@@ -1,7 +1,7 @@
 package com.example.chatApp.controller;
 
 import com.example.chatApp.domain.User;
-import com.example.chatApp.util.hibernateUtil;
+import com.example.chatApp.config.hibernateConfig;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.hibernate.*;
@@ -12,11 +12,12 @@ import org.springframework.http.ResponseEntity;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
- 
-    @Autowired
-    private SessionFactory factory = hibernateUtil.getSessionFactory();
 
-    public UserController() {
+    private final SessionFactory factory;
+
+    @Autowired
+    public UserController(SessionFactory factory) {
+        this.factory = factory;
     }
 
     @GetMapping("/{userId}")

@@ -1,7 +1,7 @@
 package com.example.chatApp.controller;
 
 import com.example.chatApp.domain.Chatroom;
-import com.example.chatApp.util.hibernateUtil;
+import com.example.chatApp.config.hibernateConfig;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.hibernate.*;
@@ -12,10 +12,11 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/api/chatroom")
 public class ChatroomController {
 
-    @Autowired
-    private SessionFactory factory = hibernateUtil.getSessionFactory();
+    private final SessionFactory factory;
 
-    public ChatroomController() {
+    @Autowired
+    public ChatroomController(SessionFactory factory) {
+        this.factory = factory;
     }
 
     @GetMapping("/{roomId}")

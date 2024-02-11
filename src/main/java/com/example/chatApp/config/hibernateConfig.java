@@ -1,16 +1,21 @@
-package com.example.chatApp.util;
+package com.example.chatApp.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-public class hibernateUtil {
+@Component
+public class hibernateConfig {
 
-    private static final SessionFactory sessionFactory;
-    private static final StandardServiceRegistry serviceRegistry;
+    private SessionFactory sessionFactory;
+    private StandardServiceRegistry serviceRegistry;
 
-    static {
+    @Bean
+    public SessionFactory getSessionFactory() {
         try {
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml");
@@ -20,13 +25,10 @@ public class hibernateUtil {
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
         } finally {
         }
-    }
-
-    public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
-    public static void closeAllResources() {
+    public void closeAllResources() {
         sessionFactory.close();
         StandardServiceRegistryBuilder.destroy(serviceRegistry);
     }

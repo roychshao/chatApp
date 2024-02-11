@@ -6,17 +6,18 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.chatApp.domain.Message;
-import com.example.chatApp.util.hibernateUtil;
+import com.example.chatApp.config.hibernateConfig;
 import org.hibernate.*;
 
 
 @Controller
 public class SocketController {
 
-    @Autowired
-    private SessionFactory factory = hibernateUtil.getSessionFactory();
+    private final SessionFactory factory;
 
-    public SocketController() {
+    @Autowired
+    public SocketController(SessionFactory factory) {
+        this.factory = factory;
     }
 
     @MessageMapping("/socket")

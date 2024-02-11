@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.UUID;
 import com.example.chatApp.domain.User;
-import com.example.chatApp.domain.Message;
 
 @Entity
 @Table(name = "_Chatroom")
@@ -14,9 +13,6 @@ public class Chatroom {
     private String roomId;
 
     private ArrayList<User> users;
-
-    @OneToMany(mappedBy = "chatroom", cascade = CascadeType.REMOVE)
-    private ArrayList<Message> messages;
 
     public Chatroom() {
     }
