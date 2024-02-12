@@ -2,6 +2,16 @@ package com.example.chatApp.controller;
 
 import com.example.chatApp.domain.Chatroom;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
+
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import jakarta.persistence.PersistenceContext;
@@ -39,15 +49,14 @@ public class ChatroomController {
 
     @Transactional
     @PostMapping("/create")
-    public ResponseEntity<Chatroom> register(@RequestBody Chatroom createChatroom) {
-        
-        Chatroom newChatroom = new Chatroom(createChatroom.getUsers());
+    public ResponseEntity<Chatroom> createChatroom(@RequestBody Chatroom createdChatroom) {
+
+        Chatroom newChatroom = new Chatroom(createdChatroom.getUsers(), createdChatroom.getMessages());
 
         try {
             
             em.persist(newChatroom);
 
-            System.out.println("Chatroom " + newChatroom.getId() + " created");
             return ResponseEntity.ok(newChatroom);
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +73,6 @@ public class ChatroomController {
             
             em.merge(updatedChatroom);
 
-            System.out.println("Chatroom " + updatedChatroom.getId() + " updated");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -82,7 +90,6 @@ public class ChatroomController {
             em.merge(deletedChatroom);
             em.remove(deletedChatroom);
 
-            System.out.println("Chatroom " + deletedChatroom.getId() + " deleted");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

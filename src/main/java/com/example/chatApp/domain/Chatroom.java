@@ -23,29 +23,38 @@ public class Chatroom {
         joinColumns = @JoinColumn(name = "roomId"),
         inverseJoinColumns = @JoinColumn(name = "userId")
     )
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     public Chatroom() {
     }
 
-    public Chatroom(Set<User> usrs) {
-        setId(UUID.randomUUID().toString());
+    public Chatroom(List<User> usrs, List<Message> msgs) {
+        setRoomId(UUID.randomUUID().toString());
         setUsers(usrs);
+        setMessages(msgs);
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> u) {
+    public void setUsers(List<User> u) {
         users = u;
     }
 
-    public String getId() {
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> msgs) {
+        messages = msgs;
+    }
+
+    public String getRoomId() {
         return roomId;
     }
 
-    public void setId(String id) {
+    public void setRoomId(String id) {
         roomId = id;
     }
 }

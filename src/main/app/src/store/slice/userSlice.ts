@@ -4,7 +4,7 @@ import axios from "axios";
 
 const initialState = {
     profile: {
-        id: "",
+        userId: "",
         name: "",
         age: 0,
         gender: "",
@@ -45,7 +45,7 @@ const userSlice = createSlice({
             .addCase(signin.fulfilled, (state:any, action:any) => {
                 state.profile = {
                     ...state.profile,
-                    id: action.payload.id,
+                    userId: action.payload.userId,
                 }
             })
     },

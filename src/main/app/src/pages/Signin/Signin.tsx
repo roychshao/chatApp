@@ -19,7 +19,7 @@ const Signin: React.FC = () => {
     var email = emailRef.current?.value || '';
     var password = passwordRef.current?.value || '';
     var userData: user = {
-      id: '',
+      userId: '',
       name: '',
       age: 0,
       gender: '',
@@ -73,7 +73,7 @@ const Signin: React.FC = () => {
           </div>
         </form>
 
-        <p>{userProfile ? userProfile.id : ""}</p>
+        <p>{userProfile ? userProfile.userId : ""}</p>
 
         <div className="text-center">
           <p className="text-sm text-gray-600">

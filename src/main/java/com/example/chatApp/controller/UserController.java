@@ -56,7 +56,6 @@ public class UserController {
             if (users.size() > 1)
                 throw new Exception("corresponding email and password is not unique.");
 
-            System.out.println("User " + users.get(0).getId() + " signin");
             return ResponseEntity.ok(users.get(0));
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +72,6 @@ public class UserController {
         try {
             em.persist(newUser);
 
-            System.out.println("User " + newUser.getId() + " created");
             return ResponseEntity.ok(newUser);
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +87,6 @@ public class UserController {
             
             em.merge(updatedUser);
 
-            System.out.println("User " + updatedUser.getId() + " updated");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -107,7 +104,6 @@ public class UserController {
             em.merge(deletedUser);
             em.remove(deletedUser);
             
-            System.out.println("User " + deletedUser.getId() + " deleted");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

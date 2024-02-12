@@ -29,7 +29,7 @@ const Register: React.FC = () => {
 
     if (password == confirmPassword) {
       var userData: user = {
-        id: '',
+        userId: '',
         name: name,
         age: age,
         gender: gender,
@@ -81,7 +81,7 @@ const Register: React.FC = () => {
         </form>
       </div>
 
-      <p>{userProfile ? userProfile.id : ''}</p>
+      <p>{userProfile ? userProfile.userId : ''}</p>
 
         <div className="text-center">
           <p className="text-sm text-gray-600">

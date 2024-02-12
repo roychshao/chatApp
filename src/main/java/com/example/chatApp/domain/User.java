@@ -20,7 +20,7 @@ public class User {
     private int age;
   
     @ManyToMany(mappedBy = "users")
-    private Set<Chatroom> chatrooms = new HashSet<>();
+    private List<Chatroom> chatrooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "fromUser")
     private List<Message> messageFrom = new ArrayList<>();
@@ -35,7 +35,7 @@ public class User {
         setName(n);
         setGender(g);
         setAge(a);
-        setId(UUID.randomUUID().toString());
+        setUserId(UUID.randomUUID().toString());
         setEmail(e);
         setPassword(p);
     }
@@ -80,11 +80,11 @@ public class User {
         password = p;
     }
 
-    public String getId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setId(String i) {
+    public void setUserId(String i) {
         userId = i;
     }
 }
