@@ -29,6 +29,23 @@ public class ChatroomController {
     }
 
     @Transactional
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Chatroom>> getUserChatrooms(@PathVariable String userId) {
+
+        try {
+            String hql = "FROM Chatroom c INNER JOIN CHATROOM_USER cu ON c.roomId = cu.roomId INNER JOIN USER u ON cu.userId = u.userId WHERE u.id = :userId;";
+            List<Chatroom> chatrooms = em.createQuery(hql, Chatroom.class)
+                .setParameter("userId", userId)
+                .getResultList();
+
+            return ResponseEntity.ok(chatrooms);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @Transactional
     @GetMapping("/{roomId}")
     public ResponseEntity<Chatroom> getChatroomById(@PathVariable String roomId) {
 
