@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { user } from './../../types/user';
-import { message } from './../../types/message';
 import axios from 'axios';
 import { chatroom } from "../../types/chatroom";
 
@@ -59,9 +57,9 @@ const chatroomSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(createChatroom.fulfilled, (state:any, action:any) => {})
-            .addCase(updateChatroom.fulfilled, (state:any, action:any) => {})
-            .addCase(deleteChatroom.fulfilled, (state:any, action:any) => {})
+            .addCase(createChatroom.fulfilled, () => {})
+            .addCase(updateChatroom.fulfilled, () => {})
+            .addCase(deleteChatroom.fulfilled, () => {})
             .addCase(getUserChatrooms.fulfilled, (state:any, action:any) => {
                 state.roomProfile.rooms = action.payload;
             })

@@ -101,7 +101,6 @@ public class UserController {
 
         try {
 
-            em.merge(deletedUser);
             em.remove(deletedUser);
             
         } catch (Exception e) {
