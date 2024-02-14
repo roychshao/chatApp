@@ -65,6 +65,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/user/signin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(signinUser)))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.userId").value(signinUser.getUserId()))
             .andExpect(jsonPath("$.name").value(signinUser.getName()))
@@ -90,6 +91,7 @@ class UserControllerTest {
         MvcResult result = mockMvc.perform(post("/api/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createdUser)))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value(createdUser.getName()))
             .andExpect(jsonPath("$.gender").value(createdUser.getGender()))
@@ -128,6 +130,7 @@ class UserControllerTest {
         mockMvc.perform(put("/api/user/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedUser)))
+            .andDo(print())
             .andExpect(status().isOk());
 
         User updatedCertainUser = em.find(User.class, updatedUser.getUserId());

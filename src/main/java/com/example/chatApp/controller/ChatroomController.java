@@ -3,15 +3,8 @@ package com.example.chatApp.controller;
 import com.example.chatApp.domain.Chatroom;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.ArrayList;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.springframework.beans.BeanUtils;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import jakarta.persistence.PersistenceContext;
@@ -29,11 +22,11 @@ public class ChatroomController {
     }
 
     @Transactional
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Chatroom>> getUserChatrooms(@PathVariable String userId) {
 
         try {
-            String hql = "FROM Chatroom c INNER JOIN CHATROOM_USER cu ON c.roomId = cu.roomId INNER JOIN USER u ON cu.userId = u.userId WHERE u.id = :userId;";
+            String hql = "SELECT c FROM Chatroom c INNER JOIN c.users u WHERE u.userId = :userId";
             List<Chatroom> chatrooms = em.createQuery(hql, Chatroom.class)
                 .setParameter("userId", userId)
                 .getResultList();

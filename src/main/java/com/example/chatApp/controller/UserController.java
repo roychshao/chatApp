@@ -101,7 +101,8 @@ public class UserController {
 
         try {
 
-            em.remove(deletedUser);
+            User userToDelete = em.find(User.class, deletedUser.getUserId());
+            em.remove(userToDelete);
             
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,9 +1,7 @@
 package com.example.chatApp.domain;
 
 import jakarta.persistence.*;
-import java.util.Set;
 import java.util.UUID;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,11 @@ public class Chatroom {
     private List<User> users = new ArrayList<>();
 
     public Chatroom() {
+    }
+
+    public Chatroom(List<User> usrs) {
+        setRoomId(UUID.randomUUID().toString());
+        setUsers(usrs);
     }
 
     public Chatroom(List<User> usrs, List<Message> msgs) {
