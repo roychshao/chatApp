@@ -12,6 +12,8 @@ public class Chatroom {
     @Id
     private String roomId;
 
+    private String roomName;
+
     @OneToMany(mappedBy = "chatroom")
     private List<Message> messages = new ArrayList<>();
 
@@ -26,15 +28,22 @@ public class Chatroom {
     public Chatroom() {
     }
 
-    public Chatroom(List<User> usrs) {
+    public Chatroom(String n) {
         setRoomId(UUID.randomUUID().toString());
-        setUsers(usrs);
+        setRoomName(n);
     }
 
-    public Chatroom(List<User> usrs, List<Message> msgs) {
+    public Chatroom(String n, List<User> usrs) {
+        setRoomId(UUID.randomUUID().toString());
+        setUsers(usrs);
+        setRoomName(n);
+    }
+
+    public Chatroom(String n, List<User> usrs, List<Message> msgs) {
         setRoomId(UUID.randomUUID().toString());
         setUsers(usrs);
         setMessages(msgs);
+        setRoomName(n);
     }
 
     public List<User> getUsers() {
@@ -59,5 +68,13 @@ public class Chatroom {
 
     public void setRoomId(String id) {
         roomId = id;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String name) {
+        roomName = name;
     }
 }

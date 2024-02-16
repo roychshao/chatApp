@@ -61,7 +61,7 @@ public class ChatroomController {
     @PostMapping("/create")
     public ResponseEntity<Chatroom> createChatroom(@RequestBody Chatroom createdChatroom) {
 
-        Chatroom newChatroom = new Chatroom(createdChatroom.getUsers(), createdChatroom.getMessages());
+        Chatroom newChatroom = new Chatroom(createdChatroom.getRoomName(), createdChatroom.getUsers(), createdChatroom.getMessages());
 
         try {
             
