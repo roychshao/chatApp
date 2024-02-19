@@ -108,4 +108,45 @@ class ChatroomControllerTest {
         Assert.isTrue(savedRoom.getUsers().get(0).getUserId().equals(createdChatRoom.getUsers().get(0).getUserId()), "Chatroom user1 do not match");
         Assert.isTrue(savedRoom.getUsers().get(1).getUserId().equals(createdChatRoom.getUsers().get(1).getUserId()), "Chatroom user2 do not match");
     }
+
+    @Test
+    void testUpdateChatroom() throws Exception {
+        
+        User user1 = new User("testUser1", "men", 18, "com.example.1@gmail.com", "123456");
+        User user2 = new User("testUser2", "women", 20, "com.example.2@gmail.com", "654321");
+        em.persist(user1);
+        em.persist(user2);
+
+        Chatroom testRoom = new Chatroom("testRoom", List.of(user1));
+        em.persist(testRoom);
+
+        Chatroom updatedChatRoom = new Chatroom("testUpdateChatroom", List.of(user1, user2));
+
+        mockMvc.perform(put("/api/chatroom/update")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(updatedChatRoom)))
+            .andDo(print())
+            .andExpect(status().isOk());
+        
+        Chatroom updatedRoom = em.find(Chatroom.class, updatedChatRoom.getRoomId());
+        Assert.notNull(updatedRoom, "Chatroom not found in the database");
+        Assert.isTrue(updatedRoom.getRoomName().equals(updatedChatRoom.getRoomName()), "Chatroom name does not match");
+        Assert.isTrue(updatedRoom.getUsers().get(0).getUserId().equals(updatedChatRoom.getUsers().get(0).getUserId()), "Chatroom user1 do not match");
+        Assert.isTrue(updatedRoom.getUsers().get(1).getUserId().equals(updatedChatRoom.getUsers().get(1).getUserId()), "Chatroom user2 do not match");
+    }
+
+    @Test
+    void testDeleteChatroom() throws Exception {
+        
+        Chatroom testRoom = new Chatroom("testRoom");
+        em.persist(testRoom);
+
+        mockMvc.perform(delete("/api/chatroom/delete")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(testRoom)))
+            .andDo(print())
+            .andExpect(status().isOk());
+
+        Assert.isNull(em.find(Chatroom.class, testRoom.getRoomId()), "Chatroom not deleted from the database");
+    }
 }

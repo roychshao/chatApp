@@ -97,8 +97,8 @@ public class ChatroomController {
 
         try {
 
-            em.merge(deletedChatroom);
-            em.remove(deletedChatroom);
+            Chatroom chatroomToDelete = em.find(Chatroom.class, deletedChatroom.getRoomId());
+            em.remove(chatroomToDelete);
 
         } catch (Exception e) {
             e.printStackTrace();
