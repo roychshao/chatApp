@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { register } from '../../store/slice/userSlice';
@@ -7,6 +7,7 @@ import { user } from '../../types/user';
 
 const Register: React.FC = () => {
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -18,6 +19,14 @@ const Register: React.FC = () => {
 
   const userProfile = useSelector((state: RootState) => state.user.profile);
 
+  useEffect(() => {
+    if (userProfile.userId) {
+      console.log("register successfully and get user profile, userId: ", userProfile.userId);
+      localStorage.setItem('userId', JSON.stringify(userProfile.userId));
+      navigate('/roomlist');
+    }
+  }, [userProfile, navigate]);
+  
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     var name = nameRef.current?.value || '';

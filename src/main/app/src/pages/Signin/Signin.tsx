@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { signin } from '../../store/slice/userSlice';
@@ -8,6 +8,7 @@ import { user } from './../../types/user';
 const Signin: React.FC = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -27,6 +28,9 @@ const Signin: React.FC = () => {
       password: password
     }
     dispatch(signin(userData));
+    if (userProfile) {
+      navigate('/roomlist');
+    }
   }
 
   return (
