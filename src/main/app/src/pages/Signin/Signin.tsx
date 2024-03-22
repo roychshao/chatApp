@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, Flex } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,15 @@ const Signin: React.FC = () => {
   const navigate = useNavigate();
 
   const userProfile = useSelector((state: RootState) => state.user.profile);
+
+
+  useEffect(() => {
+    if (userProfile.userId && userProfile.name) {
+      console.log("register successfully and get user profile, userId: ", userProfile.userId);
+      sessionStorage.setItem('userId', JSON.stringify(userProfile.userId));
+      navigate('/roomlist');
+    }
+  }, [userProfile, navigate]);
 
   const handleSignIn = (values: any) => {
     var userData: user = {

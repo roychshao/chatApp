@@ -14,9 +14,9 @@ const Register: React.FC = () => {
   const userProfile = useSelector((state: RootState) => state.user.profile);
 
   useEffect(() => {
-    if (userProfile.userId) {
+    if (userProfile.userId && userProfile.name) {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
-      localStorage.setItem('userId', JSON.stringify(userProfile.userId));
+      sessionStorage.setItem('userId', JSON.stringify(userProfile.userId));
       navigate('/roomlist');
     }
   }, [userProfile, navigate]);
