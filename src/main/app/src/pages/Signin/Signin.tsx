@@ -18,7 +18,7 @@ const Signin: React.FC = () => {
     if (userProfile.userId && userProfile.name) {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
       sessionStorage.setItem('userId', JSON.stringify(userProfile.userId));
-      navigate('/roomlist');
+      navigate('/home');
     }
   }, [userProfile, navigate]);
 

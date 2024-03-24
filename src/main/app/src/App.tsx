@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Signin from './pages/Signin/Signin';
 import Register from './pages/Register/Register';
-import RoomList from './pages/RoomList/RoomList';
+import Home from './pages/Home/Home';
 
 function App() {
 
@@ -12,7 +12,7 @@ function App() {
             <Routes>
               <Route path='/' element={<Signin />}/>
               <Route path='/register' element={<Register />}/>
-              <Route path='/roomlist' element={<RoomList/>}/>
+              <Route path='/home' element={<Home/>}/>
             </Routes>
           </>
         </>

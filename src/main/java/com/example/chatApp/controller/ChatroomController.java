@@ -1,7 +1,6 @@
 package com.example.chatApp.controller;
 
-import com.example.chatApp.domain.Chatroom;
-import com.example.chatApp.domain.User;
+import com.example.chatApp.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -7,3 +7,10 @@ export type chatroom = {
     users: user[],
     messages: message[]
 }
+
+export const nullChatroom = {
+    roomId: "",
+    roomName: "",
+    users: [] as user[],
+    messages: [] as message[]
+}

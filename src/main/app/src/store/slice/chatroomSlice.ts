@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { chatroom } from "../../types/chatroom";
-
+import { message } from "../../types/message";
+import { user } from "../../types/user";
 
 const initialState = {
     roomProfile: {
@@ -9,8 +10,8 @@ const initialState = {
             {
                 roomId: "",
                 roomName: "",
-                users: [],
-                messages: []
+                users: [] as user[],
+                messages: [] as message[],
             }
         ]
     }
