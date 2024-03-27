@@ -13,6 +13,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -37,6 +39,52 @@ class UserControllerTest {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Test
+    void testAddFriend() throws Exception {
+        
+        User user = new User("testAddFriend", "men", 18, "one.com.example@gmail.com", "123456");
+        User friend = new User("friendToAdd", "women", 18, "two.com.example@gmail.com", "654321");
+        List<User> newFriendShip = new ArrayList<>();
+        newFriendShip.add(user);
+        newFriendShip.add(friend);
+
+        em.persist(user);
+        em.persist(friend);
+        
+        mockMvc.perform(post("/api/user/friend/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newFriendShip)))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetFriends() throws Exception {
+        
+        User user = new User("testAddFriend", "men", 18, "one.com.example@gmail.com", "123456");
+        User friend = new User("friendToAdd", "women", 18, "two.com.example@gmail.com", "654321");
+        List<User> newFriendShip = new ArrayList<>();
+        newFriendShip.add(user);
+        newFriendShip.add(friend);
+
+        em.persist(user);
+        em.persist(friend);
+        
+        mockMvc.perform(post("/api/user/friend/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newFriendShip)));
+
+        mockMvc.perform(get("/api/user/friend/{userId}", user.getUserId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].userId").value(friend.getUserId()))
+                .andExpect(jsonPath("$[0].name").value(friend.getName()))
+                .andExpect(jsonPath("$[0].gender").value(friend.getGender()))
+                .andExpect(jsonPath("$[0].age").value(friend.getAge()))
+                .andExpect(jsonPath("$[0].email").value(friend.getEmail()))
+                .andExpect(jsonPath("$[0].password").value(friend.getPassword()));
+    }
 
     @Test
     void testGetUserById_Found() throws Exception {

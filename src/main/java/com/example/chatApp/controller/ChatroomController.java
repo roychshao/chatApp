@@ -34,18 +34,13 @@ public class ChatroomController {
             for (Chatroom chatroom : chatrooms) {
                 List<User> users = chatroom.getUsers();
                 if (users.size() == 2) {
-                    String roomName = "";
-                    System.out.println("|" + userId + "|");
-                    System.out.println("|" + users.get(0).getUserId() + "|");
-                    System.out.println("userId.equals(users.get(0).getUserId()): " + userId.equals(users.get(0).getUserId()));
+                    String roomName = chatroom.getRoomName();
                     if (userId.equals(users.get(0).getUserId())) {
                         roomName = users.get(1).getName();
                     } else {
                         roomName = users.get(0).getName();
                     }
-                    System.out.println(roomName);
                     chatroom.setRoomName(roomName);
-                    em.merge(chatroom);
                 }
             }
 

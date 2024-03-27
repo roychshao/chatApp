@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "_User")
@@ -16,7 +19,16 @@ public class User {
     private String email;
     private String password;
     private int age;
-  
+
+    @ManyToMany()
+    @JoinTable(
+        name = "user_friends",
+        joinColumns = @JoinColumn(name = "userId"),
+        inverseJoinColumns = @JoinColumn(name = "friendId")
+    )
+    @JsonIgnore // avoid infnite recursion when serializing
+    private List<User> friends = new ArrayList<>();
+
     @ManyToMany(mappedBy = "users")
     private List<Chatroom> chatrooms = new ArrayList<>();
 
@@ -84,5 +96,13 @@ public class User {
 
     public void setUserId(String i) {
         userId = i;
+    }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> f) {
+        friends = f;
     }
 }

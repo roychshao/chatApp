@@ -22,6 +22,47 @@ public class UserController {
     }
 
     @Transactional
+    @PostMapping("/friend/add")
+    public ResponseEntity<Void> addFriend(@RequestBody List<User> MeAndFriend) {
+        
+        try {
+            User me = em.find(User.class, MeAndFriend.get(0).getUserId());
+            User friendToAdd = em.find(User.class, MeAndFriend.get(1).getUserId());
+            
+            List<User> myFriends = me.getFriends();
+            List<User> friendsOfFriend = friendToAdd.getFriends();
+
+            myFriends.add(friendToAdd);
+            friendsOfFriend.add(me);
+
+            me.setFriends(myFriends);
+            friendToAdd.setFriends(friendsOfFriend);
+
+            em.merge(me);
+            em.merge(friendToAdd);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Transactional
+    @GetMapping("/friend/{userId}")
+    public ResponseEntity<List<User>> getFriends(@PathVariable String userId) {
+        
+        try {
+
+            User me = em.find(User.class, userId);
+
+            return ResponseEntity.ok(me.getFriends());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Transactional
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable String userId) {
        
