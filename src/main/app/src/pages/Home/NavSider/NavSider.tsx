@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, theme } from 'antd';
 import RoomList from '../../RoomList/RoomList';
+import User from '../../User/User';
 
 interface NavSiderProps {
  selectedKey: string;
@@ -31,6 +32,7 @@ const NavSider: React.FC<NavSiderProps> = (props) => {
           collapsed={false}
           width={300}
           style={{ overflow: 'auto', backgroundColor: 'white', paddingLeft: '10px', borderRight: '3px solid #f0f0f0' }}>
+          { selectedKey === '1' ? <User /> : null }
           { selectedKey === '2' ? <RoomList /> : null }
         </Sider>
         <Layout>

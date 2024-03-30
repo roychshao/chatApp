@@ -33,7 +33,7 @@ const Signin: React.FC = () => {
     }
     dispatch(signin(userData));
     if (userProfile) {
-      navigate('/roomlist');
+      navigate('/home');
     }
   }
 

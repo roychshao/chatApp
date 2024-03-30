@@ -10,6 +10,15 @@ const initialState = {
         gender: "",
         email: "",
     },
+    friends: [
+        {
+            userId: "",
+            name: "",
+            age: 0,
+            gender: "",
+            email: "",
+        }
+    ]
 };
 
 export const register:any = createAsyncThunk("user/register", async (userData: user) => {
@@ -33,6 +42,19 @@ export const signin:any = createAsyncThunk("user/signin", async (userData: user)
     return res.data;
 });
 
+export const getUserFriends:any = createAsyncThunk("user/getUserFriends", async (userId: string) => {
+    const res = await axios.get(`http://localhost:8080/api/user/friend/${userId}`, {
+        withCredentials: true
+    });
+    return res.data;
+})
+
+export const addUserFriend:any = createAsyncThunk("user/addUserFriends", async (meAndFriend: user[]) => {
+    const res = await axios.post("http://localhost:8080/api/user/friend/add", meAndFriend,
+    { withCredentials: true });
+    return res.data;
+})
+
 const userSlice = createSlice({
     name: "user",
     initialState: initialState,
@@ -43,11 +65,12 @@ const userSlice = createSlice({
                 state.profile = action.payload;
             })
             .addCase(signin.fulfilled, (state:any, action:any) => {
-                state.profile = {
-                    ...state.profile,
-                    userId: action.payload.userId,
-                }
+                state.profile = action.payload;
             })
+            .addCase(getUserFriends.fulfilled, (state:any, action:any) => {
+                state.friends = action.payload;
+            })
+            .addCase(addUserFriend.fulfilled, () => {})
     },
 });
 
