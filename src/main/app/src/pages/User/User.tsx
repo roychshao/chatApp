@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { List, Modal, Input, Space, Button, InputRef, Flex } from 'antd';
+import { List, Modal, Input, Space, Button, InputRef, Flex, Avatar } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { getUserFriends, addUserFriend } from '../../store/slice/userSlice';
@@ -82,7 +82,7 @@ const User: React.FC = () => {
       </Flex>
       <Flex align='center'>
         <UserAddOutlined onClick={toggleModal} style={{ fontSize: '20px' }}/>
-        <p style={{ marginLeft: '10px' }}>Add Friend</p>
+        <p style={{ marginLeft: '10px' }} onClick={toggleModal}>Add Friend</p>
       </Flex>
       <List
         itemLayout="horizontal"
@@ -92,6 +92,7 @@ const User: React.FC = () => {
         renderItem={(friend: any) => (
           <List.Item>
             <List.Item.Meta
+              avatar={friend.gender === "male" ? <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=25" /> : <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=44" />}
               title={friend.name}
             />
           </List.Item>

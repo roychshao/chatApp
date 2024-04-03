@@ -96,6 +96,8 @@ public class UserController {
             List<User> users = query.getResultList();
             if (users.size() > 1)
                 throw new Exception("corresponding email and password is not unique.");
+            else if (users.size() == 0)
+                throw new Exception("user with specific email and password not found.");
 
             return ResponseEntity.ok(users.get(0));
         } catch (Exception e) {

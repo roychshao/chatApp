@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "_User")

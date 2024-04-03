@@ -30,7 +30,7 @@ const NavSider: React.FC<NavSiderProps> = (props) => {
           trigger={null}
           collapsible
           collapsed={false}
-          width={300}
+          width={350}
           style={{ overflow: 'auto', backgroundColor: 'white', paddingLeft: '10px', borderRight: '3px solid #f0f0f0' }}>
           { selectedKey === '1' ? <User /> : null }
           { selectedKey === '2' ? <RoomList /> : null }
