@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, theme } from 'antd';
 import RoomList from '../../RoomList/RoomList';
 import User from '../../User/User';
+import Chatroom from '../../Chatroom/Chatroom';
 
 interface NavSiderProps {
  selectedKey: string;
@@ -44,7 +45,8 @@ const NavSider: React.FC<NavSiderProps> = (props) => {
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             }}
-          >  
+          >
+            <Chatroom />
           </Content>
         </Layout>
       </Layout>

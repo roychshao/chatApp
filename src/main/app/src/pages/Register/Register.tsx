@@ -17,6 +17,9 @@ const Register: React.FC = () => {
     if (userProfile.userId && userProfile.name) {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
       sessionStorage.setItem('userId', JSON.stringify(userProfile.userId));
+      sessionStorage.setItem('name', JSON.stringify(userProfile.name));
+      sessionStorage.setItem('gender', JSON.stringify(userProfile.gender));
+      sessionStorage.setItem('email', JSON.stringify(userProfile.email));
       navigate('/home');
     }
   }, [userProfile, navigate]);

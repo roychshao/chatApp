@@ -75,6 +75,10 @@ const chatroomSlice = createSlice({
             .addCase(getUserChatrooms.fulfilled, (state:any, action:any) => {
                 state.roomProfile.rooms = action.payload;
             })
+            .addCase(getChatroomById.fulfilled, (state:any, action:any) => {
+               const currentRoomIdx = state.roomProfile.rooms.findIndex((room: chatroom) => room.roomId === action.payload.roomId);
+               state.roomProfile.rooms[currentRoomIdx] = action.payload;
+            })
     }
 });
 
