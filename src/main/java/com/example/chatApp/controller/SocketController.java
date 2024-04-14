@@ -20,9 +20,8 @@ public class SocketController {
 
     @Transactional
     @MessageMapping("/socket")
-    @SendTo("/topic/{chatroomId}/messages")
-    public Message messageHandler(@DestinationVariable String chatroomId, Message msg) {
-        
+    @SendTo("/topic/{roomId}/messages")
+    public Message messageHandler(@DestinationVariable String roomId, Message msg) {
         try {
 
             em.persist(msg);

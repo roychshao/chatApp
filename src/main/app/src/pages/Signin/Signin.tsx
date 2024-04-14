@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { signin } from '../../store/slice/userSlice';
 import { user } from './../../types/user';
+import { setUserId, setGender } from '../../store/slice/sessionSlice';
 
 const Signin: React.FC = () => {
 
@@ -17,11 +18,8 @@ const Signin: React.FC = () => {
   useEffect(() => {
     if (userProfile.userId && userProfile.name) {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
-      sessionStorage.setItem('userId', JSON.stringify(userProfile.userId));
-      sessionStorage.setItem('name', JSON.stringify(userProfile.name));
-      sessionStorage.setItem('gender', JSON.stringify(userProfile.gender));
-      sessionStorage.setItem('email', JSON.stringify(userProfile.email));
-      navigate('/home');
+      dispatch(setUserId(userProfile.userId));
+      dispatch(setGender(userProfile.gender));
     }
   }, [userProfile, navigate]);
 
