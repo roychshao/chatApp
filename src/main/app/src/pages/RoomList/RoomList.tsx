@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List } from 'antd';
+import { List, Avatar } from 'antd';
 import { RootState } from '../../store';
 import { getUserChatrooms } from '../../store/slice/chatroomSlice';
 import { setSelectedRoomId } from '../../store/slice/sessionSlice';
+import { chatroom } from '../../types/chatroom';
 
 const RoomList: React.FC = () => {
  
@@ -15,7 +16,11 @@ const RoomList: React.FC = () => {
     dispatch(getUserChatrooms(userId));
   }, []);
 
-  
+  const getFriendGender = (room: chatroom) => {
+    const friend = room.users.find((user) => user.userId !== userId);
+    return friend?.gender;
+  }
+
   return (
     <div>
       <List
@@ -26,6 +31,7 @@ const RoomList: React.FC = () => {
         renderItem={(room) => (
           <List.Item onClick={() => dispatch(setSelectedRoomId(room.roomId)) }>
             <List.Item.Meta
+              avatar={getFriendGender(room) === "male" ? <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=25" /> : <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=44" />}
               title={room.roomName}
               description={room.messages.length > 0 ? room.messages[room.messages.length - 1].content : ''}
             />

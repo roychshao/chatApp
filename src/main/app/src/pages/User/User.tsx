@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { List, Modal, Input, Space, Button, InputRef, Flex, Avatar } from 'antd';
+import { List, Modal, Input, Space, Button, InputRef, Flex, Avatar, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { getUserFriends, addUserFriend } from '../../store/slice/userSlice';
@@ -67,6 +67,7 @@ const User: React.FC = () => {
     const friends = useSelector((state: RootState) => state.user.friends);
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
         dispatch(getUserFriends(userId));
@@ -76,6 +77,12 @@ const User: React.FC = () => {
         setModalOpen(!modalOpen);
     }
 
+    const createChatroomSuccess = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'chatroom created successfully.',
+        });
+    }
 
     const handleCreateChatroom = (friendId: string) => {
 
@@ -104,12 +111,13 @@ const User: React.FC = () => {
         }
         dispatch(createChatroom(chatroomData)).then(() => {
             dispatch(getUserChatrooms(userId));
+            createChatroomSuccess();
         })
-
     }
 
     return (
         <div>
+            {contextHolder}
             <Flex align='center' style={{ marginTop: '10px' }}>
                 <ItalicOutlined style={{ fontSize: '20px' }} />
                 <p style={{ marginLeft: '10px' }}>{userId}</p>
@@ -131,7 +139,7 @@ const User: React.FC = () => {
                                 title={friend.name}
                             />
                         </List.Item>
-                        <MessageOutlined onClick={() => handleCreateChatroom(friend.userId)} />
+                        <MessageOutlined style={{ marginLeft: '75%', fontSize: '20px' }} onClick={() => handleCreateChatroom(friend.userId)} />
                     </Flex>
                 )}>
             </List>

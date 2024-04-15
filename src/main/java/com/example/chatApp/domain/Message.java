@@ -13,15 +13,15 @@ public class Message {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "fromUserId", referencedColumnName = "userId", nullable = false)
+    @JoinColumn(name = "fromUserId", referencedColumnName = "userId", nullable = true)
     private User fromUser;
 
-    @ManyToOne
-    @JoinColumn(name = "toUserId", referencedColumnName = "userId", nullable = false)
+	@ManyToOne
+    @JoinColumn(name = "toUserId", referencedColumnName = "userId", nullable = true)
     private User toUser;
 
-    @ManyToOne
-    @JoinColumn(name = "chatroomId", referencedColumnName = "roomId", nullable = false)
+	@ManyToOne
+    @JoinColumn(name = "chatroomId", referencedColumnName = "roomId", nullable = true)
     private Chatroom chatroom;
 
     private Date time;
@@ -32,8 +32,8 @@ public class Message {
     public Message (String m, User f, User t, Date d) {
         messageId = UUID.randomUUID().toString();
         setContent(m);
-        setFrom(f);
-        setTo(t);
+        setFromUser(f);
+        setToUser(t);
         setTime(d);
     }
 
@@ -53,20 +53,20 @@ public class Message {
         this.content = str;
     }
 
-    public User getFrom() {
+    public User getFromUser() {
         return fromUser;
     }
 
-    public void setFrom(User user) {
-        fromUser = user;
+    public void setFromUser(User fromUser) {
+        this.fromUser = fromUser;
     }
 
-    public User getTo() {
+    public User getToUser() {
         return toUser;
     }
 
-    public void setTo(User user) {
-        toUser = user;
+    public void setToUser(User toUser) {
+        this.toUser = toUser;
     }
 
     public Date getTime() {

@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
 import { RootState } from '../../store';
 import { List, Input, Button, Layout,
-         Row, Col, Divider, Avatar } from 'antd';
+         Row, Col, Avatar, 
+         InputRef, Flex } from 'antd';
 import { FileAddOutlined } from '@ant-design/icons';
 import { getChatroomById } from '../../store/slice/chatroomSlice';
 import { chatroom } from '../../types/chatroom';
 import { message } from '../../types/message';
+import { Header } from 'antd/es/layout/layout';
 
 const { Footer, Content } = Layout;
 
@@ -17,7 +19,7 @@ const Chatroom: React.FC = () => {
     const userId = useSelector((state: RootState) => state.session.sessions.userId);
     const gender = useSelector((state: RootState) => state.session.sessions.gender);
     const roomId = useSelector((state: RootState) => state.session.sessions.selectedRoomId);
-    const [inputMessage, setInputMessage] = useState<string>('');
+    const inputMessageRef = useRef<InputRef>(null);
     const chatroomData: chatroom = useSelector((state: RootState) => {
         const idx = state.chatroom.roomProfile.rooms.findIndex((room: chatroom) => {
             return room.roomId === roomId;
@@ -34,7 +36,7 @@ const Chatroom: React.FC = () => {
     * configure client websocket
     */
     const client = new Client({
-        brokerURL: 'ws://localhost:8080/socket',
+        brokerURL: 'ws://localhost:8080/chatApp',
         debug: (str) => {
             console.log(str);
         },
@@ -56,7 +58,7 @@ const Chatroom: React.FC = () => {
     };
 
     const sendMessage = (messageContent: message) => {
-        client.publish({ destination: `/topic/${roomId}/messages`, body: JSON.stringify(messageContent)});
+        client.publish({ destination: `/socket/${roomId}/messages`, body: JSON.stringify(messageContent)});
     };
 
     client.activate();
@@ -64,7 +66,7 @@ const Chatroom: React.FC = () => {
     const handleSendMessage = () => {
         var message: message = {
             messageId: '',
-            content: inputMessage,
+            content: inputMessageRef.current?.input?.value || '',
             fromUser: {
                 userId: userId,
                 name: '',
@@ -89,9 +91,18 @@ const Chatroom: React.FC = () => {
 
     return (
         <Layout>
+            <Header
+                style={{
+                    height: '8vh'
+                }}
+            >
+               <Flex align='center' justify='left' style={{ height: '100%' }}>
+                    <p style={{ color: 'white', fontSize: '20px' }}>{chatroomData?.roomName}</p>
+               </Flex>
+            </Header>
             <Content
                 style={{
-                    minHeight: '83vh'
+                    height: '80vh'
                 }}
             >
                 <List
@@ -109,16 +120,18 @@ const Chatroom: React.FC = () => {
                     )}
                 />
             </Content>
-            <Divider />
-            <Footer>
+            <Footer
+                style={{
+                    height: '12vh'
+                }}
+            >
                 <Row align={'middle'}>
                         <Col span={2}>
                             <FileAddOutlined style={{ fontSize: '18px' }} />
                         </Col>
                         <Col span={18}>
                             <Input
-                                value={inputMessage}
-                                onChange={(e) => setInputMessage(e.target.value)}
+                                ref={inputMessageRef}
                                 placeholder='Type a message'
                                 size='large'
                             />
