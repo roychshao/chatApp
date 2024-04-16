@@ -1,10 +1,15 @@
 import React,{ useState } from 'react';
-import { Layout, Menu, theme } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { Layout, Menu, theme, Modal } from 'antd';
 import {
   UploadOutlined,
   UserOutlined,
-  WechatOutlined
+  WechatOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { clearUserData } from '../../store/slice/userSlice';
+import { persistor } from '../../store';
 import NavSider from './NavSider/NavSider';
 
 const { Sider, Content } = Layout;
@@ -12,6 +17,9 @@ const { Sider, Content } = Layout;
 const SideMenu: React.FC = () => {
 
   const [selectedKey, setSelectedKey] = useState<string>('2');
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleToggleMenu = (e: any) => {
     setSelectedKey(e.key);
@@ -21,8 +29,34 @@ const SideMenu: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const showLogoutModal = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    persistor.purge().then(() => {
+      persistor.flush();
+      persistor.pause();
+      persistor.persist();
+      dispatch(clearUserData());
+      setIsLogoutModalOpen(false);
+      navigate('/');
+    })
+  }
+
+  const handleCancelLogout = () => {
+    setIsLogoutModalOpen(false);
+  }
+
   return (
     <Layout>
+      <Modal title="Do you really want to logout?"
+        open={isLogoutModalOpen}
+        onOk={handleLogout}
+        onCancel={handleCancelLogout}
+      >
+        <p>your data persist in the browser will be cleared completely.</p>
+      </Modal>
       <Sider trigger={null} collapsible collapsed={true}>
         <Menu
           theme="dark"
@@ -44,6 +78,11 @@ const SideMenu: React.FC = () => {
               key: '3',
               icon: <UploadOutlined />,
               label: 'Others',
+            },
+            {
+              key: '4',
+              icon: <LogoutOutlined onClick={showLogoutModal}/>,
+              label: 'Logout',
             },
           ]}
         />

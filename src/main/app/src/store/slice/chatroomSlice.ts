@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { chatroom } from "../../types/chatroom";
 import { message } from "../../types/message";
@@ -63,10 +63,27 @@ export const deleteChatroom: any = createAsyncThunk("chatroom/deleteChatroom", a
     return res.data;
 });
 
+interface AppendMessagePayload {
+ roomId: string;
+ body: message;
+}
+
 const chatroomSlice = createSlice({
     name: "chatroom",
     initialState: initialState,
-    reducers: {},
+    reducers: {
+      appendMessage: (state:any, action:PayloadAction<AppendMessagePayload>) => {
+        const { roomId, body } = action.payload;
+        const currentRoomIdx = state.roomProfile.rooms.findIndex((room:chatroom) => {
+          return room.roomId === roomId;
+        })
+        const originMessages = state.roomProfile.rooms[currentRoomIdx].messages;
+        state.roomProfile.rooms[currentRoomIdx].messages = [...originMessages, body];
+      },
+      clearChatroomData: (state:any) => {
+        state.roomProfile = initialState.roomProfile;
+      }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(createChatroom.fulfilled, () => {})
@@ -82,4 +99,5 @@ const chatroomSlice = createSlice({
     }
 });
 
+export const { appendMessage, clearChatroomData } = chatroomSlice.actions;
 export default chatroomSlice.reducer;

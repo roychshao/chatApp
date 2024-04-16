@@ -20,6 +20,7 @@ const Signin: React.FC = () => {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
       dispatch(setUserId(userProfile.userId));
       dispatch(setGender(userProfile.gender));
+      navigate('/home');
     }
   }, [userProfile, navigate]);
 
@@ -33,9 +34,6 @@ const Signin: React.FC = () => {
       password: values.password
     }
     dispatch(signin(userData));
-    if (userProfile) {
-      navigate('/home');
-    }
   }
 
   return (

@@ -24,14 +24,15 @@ public class Message {
     @JoinColumn(name = "chatroomId", referencedColumnName = "roomId", nullable = true)
     private Chatroom chatroom;
 
-    private Date time;
+	private Date time;
 
     public Message () {
     }
 
-    public Message (String m, User f, User t, Date d) {
+    public Message (String m, Chatroom c, User f, User t, Date d) {
         messageId = UUID.randomUUID().toString();
         setContent(m);
+        setChatroom(c); 
         setFromUser(f);
         setToUser(t);
         setTime(d);
@@ -51,6 +52,14 @@ public class Message {
 
     public void setContent(String str) {
         this.content = str;
+    }
+
+    public Chatroom getChatroom() {
+        return chatroom;
+    }
+
+    public void setChatroom(Chatroom chatroom) {
+        this.chatroom = chatroom;
     }
 
     public User getFromUser() {

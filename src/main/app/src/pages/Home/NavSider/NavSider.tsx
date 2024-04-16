@@ -10,54 +10,54 @@ import { RootState } from './../../../store/index.ts';
 // persistor.purge(['session']);
 
 interface NavSiderProps {
-    selectedKey: string;
+  selectedKey: string;
 }
 
 const NavSider: React.FC<NavSiderProps> = (props) => {
 
-    /* about selectedKey
+  /* about selectedKey
      * 1: User
      * 2: Chatroom
      */
 
-    const { selectedKey } = props;
+  const { selectedKey } = props;
 
-    const { Sider, Content } = Layout;
+  const { Sider, Content } = Layout;
 
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
-    const roomId = useSelector((state: RootState) => state.session.sessions.selectedRoomId);
+  const roomId = useSelector((state: RootState) => state.session.sessions.selectedRoomId);
 
-    return (
-        <div>
-            <Layout>
-                <Sider
-                    trigger={null}
-                    collapsible
-                    collapsed={false}
-                    width={350}
-                    style={{ overflow: 'auto', backgroundColor: 'white', paddingLeft: '10px', borderRight: '3px solid #f0f0f0' }}>
-                    {selectedKey === '1' ? <User /> : null}
-                    {selectedKey === '2' ? <RoomList /> : null}
-                </Sider>
-                <Layout>
-                    <Content
-                        style={{
-                            margin: '0px 0px',
-                            padding: 0,
-                            minHeight: '100vh',
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
-                        {roomId !== '' ? <Chatroom /> : <p>No Room is selected</p>}
-                    </Content>
-                </Layout>
-            </Layout>
-        </div>
-    );
+  return (
+    <div>
+      <Layout>
+        <Sider
+          trigger={null}
+          collapsible
+          collapsed={false}
+          width={350}
+          style={{ overflow: 'auto', backgroundColor: 'white', paddingLeft: '10px', borderRight: '3px solid #f0f0f0' }}>
+          {selectedKey === '1' ? <User /> : null}
+          {selectedKey === '2' ? <RoomList /> : null}
+        </Sider>
+        <Layout>
+          <Content
+            style={{
+              margin: '0px 0px',
+              padding: 0,
+              minHeight: '100vh',
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            {roomId !== '' ? <Chatroom /> : <p>No Room is selected</p>}
+          </Content>
+        </Layout>
+      </Layout>
+    </div>
+  );
 }
 
 export default NavSider;

@@ -1,7 +1,6 @@
 package com.example.chatApp.controller;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
-// import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -29,12 +28,11 @@ public class SocketController {
     public void messageHandler(@DestinationVariable String roomId, Message msg) {
         try {
 
-            Message message = new Message(msg.getContent(), msg.getFromUser(), msg.getToUser(), msg.getTime());
+            Message message = new Message(msg.getContent(), msg.getChatroom(), msg.getFromUser(), msg.getToUser(), msg.getTime());
             em.persist(message);
-
+            simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/messages", message);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/messages", msg);
     }
 }
