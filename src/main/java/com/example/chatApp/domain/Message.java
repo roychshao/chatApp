@@ -3,6 +3,7 @@ package com.example.chatApp.domain;
 import java.util.UUID;
 import java.util.Date;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "_Message")
@@ -22,6 +23,7 @@ public class Message {
 
 	@ManyToOne
     @JoinColumn(name = "chatroomId", referencedColumnName = "roomId", nullable = true)
+    @JsonBackReference
     private Chatroom chatroom;
 
 	private Date time;

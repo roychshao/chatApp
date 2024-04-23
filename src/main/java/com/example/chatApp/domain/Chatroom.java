@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "_Chatroom")
@@ -15,6 +16,7 @@ public class Chatroom {
     private String roomName;
 
     @OneToMany(mappedBy = "chatroom")
+    @JsonManagedReference
     private List<Message> messages = new ArrayList<>();
 
     @ManyToMany

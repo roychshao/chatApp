@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, /*ComponentType*/ } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
 import { RootState } from '../../store';
-import { List, Input, Button, Layout,
+import { /*List, */Input, Button, Layout,
   Row, Col, Avatar, 
   InputRef, Flex } from 'antd';
 import { FileAddOutlined } from '@ant-design/icons';
@@ -10,8 +10,10 @@ import { getChatroomById, appendMessage } from '../../store/slice/chatroomSlice'
 import { chatroom } from '../../types/chatroom';
 import { message } from '../../types/message';
 import { Header } from 'antd/es/layout/layout';
+import { FixedSizeList as List } from "react-window";
 
 const { Footer, Content } = Layout;
+// const FixedSizeList = _FixedSizeList as ComponentType<FixedSizeListProps>;
 
 const Chatroom: React.FC = () => {
 
@@ -26,6 +28,7 @@ const Chatroom: React.FC = () => {
     return state.chatroom.roomProfile.rooms[idx];
   });
   const [wsClient, setWsClient] = useState<Client>(() => new Client());
+  const listRef = useRef<List>(null);
 
   useEffect(() => {
     dispatch(getChatroomById(roomId));
@@ -74,7 +77,7 @@ const Chatroom: React.FC = () => {
       }
       client.deactivate();
     };
-  }, [])
+  }, [roomId])
 
   const sendMessage = (messageContent: message) => {
     wsClient.publish({ destination: `/socket/${roomId}/messages`, body: JSON.stringify(messageContent)});
@@ -82,6 +85,7 @@ const Chatroom: React.FC = () => {
 
 
   const handleSendMessage = () => {
+    // send message
     const me = chatroomData.users.find(user => user.userId === userId);
     const opponent = chatroomData.users.find(user => user.userId !== userId);
     var message: message = {
@@ -107,7 +111,19 @@ const Chatroom: React.FC = () => {
       time: new Date()
     }
     sendMessage(message);
+
+    // clear and focus the input
+    if (inputMessageRef.current && inputMessageRef.current.input) {
+      inputMessageRef.current.input.value = '';
+      inputMessageRef.current.focus();
+    }
   }
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollToItem(chatroomData.messages.length - 1, 'end');
+    }
+  }, [chatroomData.messages.length])
 
   return (
     <Layout>
@@ -126,20 +142,43 @@ const Chatroom: React.FC = () => {
         }}
       >
         <List
-          dataSource={chatroomData.messages}
-          style={{ overflowY: 'scroll' }}
-          renderItem={(message) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={message.fromUser.gender === 'male' ? 
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=25"/> : 
-                  <Avatar src="https://api/dicebear.com/7.x/miniavs/svg?seed=44"/>
-                }
-                description={message.content}
-              />
-            </List.Item>
-          )}
-        />
+          ref={listRef}
+          height={window.innerHeight * 0.8}
+          itemCount={chatroomData.messages.length}
+          itemSize={50}
+          width='100%'
+          initialScrollOffset={(chatroomData.messages.length - 1) * 120}
+        >
+          {({ index, style }) => {
+            const message = chatroomData.messages[index];
+            return (
+              <div
+                style={{
+                  ...style,
+                  display: 'flex',
+                  justifyContent: message.fromUser.userId === userId ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: message.fromUser.userId === userId ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Avatar 
+                    src={message.fromUser.gender === 'male' ? 
+                      "https://api.dicebear.com/7.x/miniavs/svg?seed=25" : 
+                      "https://api.dicebear.com/7.x/miniavs/svg?seed=44"
+                    } 
+                    style={{ marginRight: '8px', marginLeft: '8px' }}
+                  />
+                  <div>{message.content}</div>
+                </div>
+              </div>
+            );
+          }}
+        </List>
       </Content>
       <Footer
         style={{
