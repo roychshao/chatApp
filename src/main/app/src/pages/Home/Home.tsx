@@ -35,9 +35,6 @@ const SideMenu: React.FC = () => {
 
   const handleLogout = () => {
     persistor.purge().then(() => {
-      persistor.flush();
-      persistor.pause();
-      persistor.persist();
       dispatch(clearUserData());
       setIsLogoutModalOpen(false);
       navigate('/');

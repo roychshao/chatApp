@@ -6,9 +6,6 @@ import User from '../../User/User';
 import Chatroom from '../../Chatroom/Chatroom';
 import { RootState } from './../../../store/index.ts';
 
-// TODO: clear reducer persisted in sessionStorage when logout
-// persistor.purge(['session']);
-
 interface NavSiderProps {
   selectedKey: string;
 }
