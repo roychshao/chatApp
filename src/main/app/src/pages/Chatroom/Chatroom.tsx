@@ -173,7 +173,22 @@ const Chatroom: React.FC = () => {
                     } 
                     style={{ marginRight: '8px', marginLeft: '8px' }}
                   />
-                  <div>{message.content}</div>
+                  <div
+                    style={message.fromUser.userId === userId ? {
+                      padding: '10px 20px',
+                      backgroundColor: '#add8e6',
+                      borderRadius: '20px',
+                      maxWidth: '80%',
+                      margin: '5px 0',
+                    } : {
+                      padding: '10px 20px',
+                      backgroundColor: '#ffe4b5',
+                      borderRadius: '20px',
+                      maxWidth: '80%',
+                      margin: '5px 0',
+                    }}>
+                    {message.content}
+                  </div>
                 </div>
               </div>
             );
