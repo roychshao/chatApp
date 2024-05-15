@@ -3,6 +3,10 @@ package com.example.chatApp.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
+import java.math.BigInteger;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -43,9 +47,24 @@ public class User {
         setName(n);
         setGender(g);
         setAge(a);
-        setUserId(UUID.randomUUID().toString());
+        setUserId(hashEmail(e));
         setEmail(e);
         setPassword(p);
+    }
+
+    public String hashEmail(String email) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(email.getBytes(StandardCharsets.UTF_8));
+            BigInteger number = new BigInteger(1, hash);
+            StringBuilder hexString = new StringBuilder(number.toString(16));
+            while (hexString.length() < 32) {
+                hexString.insert(0, '0');
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getName() {
