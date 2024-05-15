@@ -2,7 +2,6 @@ package com.example.chatApp.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 
     @Id
+    @Column(name = "USERID")
     private String userId;
     private String name;
     private String gender;
