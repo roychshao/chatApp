@@ -3,3 +3,4 @@ node
 target
 dist
 .vim
+actions-runner
