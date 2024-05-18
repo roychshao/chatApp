@@ -34,7 +34,7 @@ public class ChatroomController {
             for (Chatroom chatroom : chatrooms) {
                 List<User> users = chatroom.getUsers();
                 if (users.size() == 2) {
-                    String roomName = chatroom.getRoomName();
+                    String roomName = "";
                     if (userId.equals(users.get(0).getUserId())) {
                         roomName = users.get(1).getName();
                     } else {
@@ -83,9 +83,6 @@ public class ChatroomController {
                 User tmp = em.find(User.class, user.getUserId());
                 if (tmp == null) {
                     throw new Exception("User " + user.getUserId() + " does not exist.");
-                }
-                else {
-                    user = tmp;
                 }
             }
             newChatroom.setUsers(newUsers);

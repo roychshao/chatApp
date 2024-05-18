@@ -14,13 +14,14 @@ import jakarta.transaction.Transactional;
 @Controller
 public class SocketController {
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @PersistenceContext
     private EntityManager em;
 
-    public SocketController() {
+    @Autowired
+    public SocketController(SimpMessagingTemplate simpMessagingTemplate) {
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Transactional
