@@ -1,4 +1,4 @@
-# ChatAPP
+# ChatApp
 
 ## What is this?
 > This is an exercise-based project  
