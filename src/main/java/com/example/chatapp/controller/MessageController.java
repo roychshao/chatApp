@@ -1,9 +1,12 @@
-package com.example.chatApp.controller;
+package com.example.chatapp.controller;
 
-import com.example.chatApp.domain.Message;
+import com.example.chatapp.domain.Message;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,10 @@ public class MessageController {
     @PersistenceContext
     private EntityManager em;
 
+    private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
+
     public MessageController() {
+        // nothing need to do in the non-argument constructor
     }
 
     @Transactional
@@ -34,7 +40,7 @@ public class MessageController {
             
             return ResponseEntity.ok(messages);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getRecentFiftyMessage:", e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }

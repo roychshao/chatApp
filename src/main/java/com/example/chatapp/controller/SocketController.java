@@ -1,4 +1,4 @@
-package com.example.chatApp.controller;
+package com.example.chatapp.controller;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Controller;
 
-import com.example.chatApp.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.example.chatapp.domain.*;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -15,6 +18,8 @@ import jakarta.transaction.Transactional;
 public class SocketController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
+    
+    private static final Logger logger = LoggerFactory.getLogger(SocketController.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -33,7 +38,7 @@ public class SocketController {
             em.persist(message);
             simpMessagingTemplate.convertAndSend("/topic/" + roomId + "/messages", message);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("messageHandler:", e);
         }
     }
 }

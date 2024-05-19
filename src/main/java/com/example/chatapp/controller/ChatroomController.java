@@ -1,9 +1,12 @@
-package com.example.chatApp.controller;
+package com.example.chatapp.controller;
 
-import com.example.chatApp.domain.*;
+import com.example.chatapp.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,10 @@ public class ChatroomController {
     @PersistenceContext
     private EntityManager em;
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatroomController.class);
+
     public ChatroomController() {
+        // nothing need to do in the non-argument constructor
     }
 
     @Transactional
@@ -46,7 +52,7 @@ public class ChatroomController {
 
             return ResponseEntity.ok(chatrooms);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getUserChatrooms:", e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -65,7 +71,7 @@ public class ChatroomController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getChatroomById:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -82,7 +88,7 @@ public class ChatroomController {
             for (User user : newUsers) {
                 User tmp = em.find(User.class, user.getUserId());
                 if (tmp == null) {
-                    throw new Exception("User " + user.getUserId() + " does not exist.");
+                    throw new NullPointerException("User " + user.getUserId() + " does not exist.");
                 }
             }
             newChatroom.setUsers(newUsers);
@@ -91,7 +97,7 @@ public class ChatroomController {
 
             return ResponseEntity.ok(newChatroom);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("createChatroom:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -106,7 +112,7 @@ public class ChatroomController {
             em.merge(updatedChatroom);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("updateChatroom:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -123,7 +129,7 @@ public class ChatroomController {
             em.remove(chatroomToDelete);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("deleteChatroom:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

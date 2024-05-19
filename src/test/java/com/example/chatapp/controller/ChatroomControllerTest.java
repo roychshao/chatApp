@@ -1,4 +1,4 @@
-package com.example.chatApp.controller;
+package com.example.chatapp.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -19,9 +19,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
-import com.example.chatApp.domain.User;
-import com.example.chatApp.domain.Chatroom;
+import com.example.chatapp.domain.User;
+import com.example.chatapp.domain.Chatroom;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

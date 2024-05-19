@@ -25,7 +25,7 @@ const Signin: React.FC = () => {
   }, [userProfile, navigate]);
 
   const handleSignIn = (values: any) => {
-    var userData: user = {
+    let userData: user = {
       userId: '',
       name: '',
       age: 0,

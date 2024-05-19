@@ -28,7 +28,7 @@ const Register: React.FC = () => {
       console.log("password and confirm password not match");
       return;
     }
-    var userData: user = {
+    let userData: user = {
       userId: '',
       name: values.name,
       age: values.age,

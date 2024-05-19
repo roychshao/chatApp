@@ -23,8 +23,8 @@ const AddUserModal: React.FC<AddUserModalProps> = (props) => {
 
     console.log("handleAddFriend");
     console.log(friendIdRef.current?.input?.value);
-    var friendId = friendIdRef.current?.input?.value || '';
-    var meAndFriend: user[] = [
+    let friendId = friendIdRef.current?.input?.value ?? '';
+    let meAndFriend: user[] = [
       {
         userId: userId,
         name: "",
@@ -49,14 +49,12 @@ const AddUserModal: React.FC<AddUserModalProps> = (props) => {
   }
 
   return (
-    <>
-      <Modal title="Add Friend" open={modalOpen} onCancel={toggleModal} footer={null}>
-        <Space.Compact style={{ width: '100%' }}>
-          <Input placeholder="User ID" ref={friendIdRef} />
-          <Button type="primary" onClick={handleAddFriend}>add</Button>
-        </Space.Compact>
-      </Modal>
-    </>
+    <Modal title="Add Friend" open={modalOpen} onCancel={toggleModal} footer={null}>
+      <Space.Compact style={{ width: '100%' }}>
+        <Input placeholder="User ID" ref={friendIdRef} />
+        <Button type="primary" onClick={handleAddFriend}>add</Button>
+      </Space.Compact>
+    </Modal>
   )
 }
 
@@ -142,7 +140,7 @@ const User: React.FC = () => {
       </Flex>
       <Flex align='center'>
         <UserAddOutlined onClick={toggleModal} style={{ fontSize: '20px' }} />
-        <p style={{ marginLeft: '10px' }} onClick={toggleModal}>Add Friend</p>
+        <button style={{ marginLeft: '10px' }} onClick={toggleModal}>Add Friend</button>
       </Flex>
       <List
         itemLayout="horizontal"

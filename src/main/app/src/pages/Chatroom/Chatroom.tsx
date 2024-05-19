@@ -45,9 +45,9 @@ const Chatroom: React.FC = () => {
       heartbeatOutgoing: 4000,
     });
 
-    var subscriptionId: any = null;
+    let subscriptionId: any = null;
     client.onConnect = (frame) => {
-      console.log('Connected: ' + frame);
+      console.log('Connected: ' + JSON.stringify(frame));
 
       if (subscriptionId) {
         client.unsubscribe(subscriptionId);
@@ -88,24 +88,24 @@ const Chatroom: React.FC = () => {
     // send message
     const me = chatroomData.users.find(user => user.userId === userId);
     const opponent = chatroomData.users.find(user => user.userId !== userId);
-    var message: message = {
+    let message: message = {
       messageId: '',
-      content: inputMessageRef.current?.input?.value || '',
+      content: inputMessageRef.current?.input?.value ?? '',
       fromUser: {
         userId: userId,
-        name: me?.name || '',
-        age: me?.age || 0,
-        gender: me?.gender || '',
-        email: me?.email || '',
-        password: me?.password || '',
+        name: me?.name ?? '',
+        age: me?.age ?? 0,
+        gender: me?.gender ?? '',
+        email: me?.email ?? '',
+        password: me?.password ?? '',
       },
       toUser: {
-        userId: opponent?.userId || '',
-        name: opponent?.name || '',
-        age: opponent?.age || 0,
-        gender: opponent?.gender || '',
-        email: opponent?.email || '',
-        password: opponent?.password || '',
+        userId: opponent?.userId ?? '',
+        name: opponent?.name ?? '',
+        age: opponent?.age ?? 0,
+        gender: opponent?.gender ?? '',
+        email: opponent?.email ?? '',
+        password: opponent?.password ?? '',
       },
       chatroom: chatroomData,
       time: new Date()
@@ -113,7 +113,7 @@ const Chatroom: React.FC = () => {
     sendMessage(message);
 
     // clear and focus the input
-    if (inputMessageRef.current && inputMessageRef.current.input) {
+    if (inputMessageRef?.current?.input) {
       inputMessageRef.current.input.value = '';
       inputMessageRef.current.focus();
     }

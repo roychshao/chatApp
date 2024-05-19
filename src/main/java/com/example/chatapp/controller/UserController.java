@@ -1,7 +1,7 @@
-package com.example.chatApp.controller;
+package com.example.chatapp.controller;
 
 import java.util.List;
-import com.example.chatApp.domain.User;
+import com.example.chatapp.domain.User;
 import org.springframework.web.bind.annotation.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -9,6 +9,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/user")
@@ -18,16 +21,21 @@ public class UserController {
     @PersistenceContext
     private EntityManager em;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     public UserController() {
+        // nothing need to do in the non-argument constructor
     }
 
     @Transactional
     @PostMapping("/friend/add")
-    public ResponseEntity<Void> addFriend(@RequestBody List<User> MeAndFriend) {
+    public ResponseEntity<Void> addFriend(@RequestBody List<User> users) {
         
         try {
-            User me = em.find(User.class, MeAndFriend.get(0).getUserId());
-            User friendToAdd = em.find(User.class, MeAndFriend.get(1).getUserId());
+            // users[0] contains the user
+            // user[1] contains the friend user is going to add
+            User me = em.find(User.class, users.get(0).getUserId());
+            User friendToAdd = em.find(User.class, users.get(1).getUserId());
             
             List<User> myFriends = me.getFriends();
             List<User> friendsOfFriend = friendToAdd.getFriends();
@@ -42,7 +50,7 @@ public class UserController {
             em.merge(friendToAdd);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("addFriend:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -57,7 +65,7 @@ public class UserController {
 
             return ResponseEntity.ok(me.getFriends());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getFriends:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -75,7 +83,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getUserById:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -95,13 +103,13 @@ public class UserController {
 
             List<User> users = query.getResultList();
             if (users.size() > 1)
-                throw new Exception("corresponding email and password is not unique.");
-            else if (users.size() == 0)
-                throw new Exception("user with specific email and password not found.");
+                throw new IllegalArgumentException("corresponding email and password is not unique.");
+            else if (users.isEmpty())
+                throw new NullPointerException("user with specific email and password not found.");
 
             return ResponseEntity.ok(users.get(0));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("signIn:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -117,7 +125,7 @@ public class UserController {
 
             return ResponseEntity.ok(newUser);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("register:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -131,7 +139,7 @@ public class UserController {
             em.merge(updatedUser);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("updateUser:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -148,7 +156,7 @@ public class UserController {
             em.remove(userToDelete);
             
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("deleteUser:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

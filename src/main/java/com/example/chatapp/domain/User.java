@@ -1,4 +1,4 @@
-package com.example.chatApp.domain;
+package com.example.chatapp.domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class User {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new SecurityException("SHA-256 algorithm not available", e);
         }
     }
 

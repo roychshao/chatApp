@@ -1,4 +1,4 @@
-package com.example.chatApp.controller;
+package com.example.chatapp.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -23,9 +23,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.example.chatApp.domain.User;
+import com.example.chatapp.domain.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -148,7 +150,7 @@ class UserControllerTest {
             .andExpect(jsonPath("$.password").value(createdUser.getPassword()))
             .andReturn();
 
-        Map<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), Map.class);
+        Map<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Map<String, String>>() {});
         String userId = (String) response.get("userId");
         String name = (String) response.get("name");
         String gender = (String) response.get("gender");

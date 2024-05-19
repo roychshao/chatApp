@@ -1,4 +1,4 @@
-package com.example.chatApp.domain;
+package com.example.chatapp.domain;
 
 import java.util.UUID;
 import java.util.Date;
