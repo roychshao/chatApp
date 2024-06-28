@@ -12,7 +12,7 @@ const persistConfig = {
 
 const persistedSessionReducer = persistReducer(persistConfig, sessionReducer);
 
-const rootReducer = {
+export const rootReducer = {
     user: userReducer,
     chatroom: chatroomReducer,
     session: persistedSessionReducer,
