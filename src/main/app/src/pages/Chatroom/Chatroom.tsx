@@ -209,6 +209,7 @@ const Chatroom: React.FC = () => {
               ref={inputMessageRef}
               placeholder='Type a message'
               size='large'
+              onPressEnter={handleSendMessage}
             />
           </Col>
           <Col span={3} offset={1}>

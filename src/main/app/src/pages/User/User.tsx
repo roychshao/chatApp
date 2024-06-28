@@ -140,7 +140,7 @@ const User: React.FC = () => {
       </Flex>
       <Flex align='center'>
         <UserAddOutlined onClick={toggleModal} style={{ fontSize: '20px' }} />
-        <button style={{ marginLeft: '10px' }} onClick={toggleModal}>Add Friend</button>
+        <button style={{ marginLeft: '10px', backgroundColor: 'transparent', border: 'none' }} onClick={toggleModal}>Add Friend</button>
       </Flex>
       <List
         itemLayout="horizontal"
