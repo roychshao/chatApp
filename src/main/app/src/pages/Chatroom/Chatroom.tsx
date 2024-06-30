@@ -1,26 +1,26 @@
-import React, { useEffect, useRef, useState, /*ComponentType*/ } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
 import { RootState } from '../../store';
-import { /*List, */Input, Button, Layout,
+import { Input, Button, Layout,
   Row, Col, Avatar, 
-  InputRef, Flex } from 'antd';
+  /*InputRef,*/ Flex } from 'antd';
 import { FileAddOutlined } from '@ant-design/icons';
 import { getChatroomById, appendMessage } from '../../store/slice/chatroomSlice';
 import { chatroom } from '../../types/chatroom';
 import { message } from '../../types/message';
 import { Header } from 'antd/es/layout/layout';
-import { FixedSizeList as List } from "react-window";
+// import { FixedSizeList as List } from "react-window";
+import { VariableSizeList as List } from "react-window";
 
 const { Footer, Content } = Layout;
-// const FixedSizeList = _FixedSizeList as ComponentType<FixedSizeListProps>;
 
 const Chatroom: React.FC = () => {
 
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.session.sessions.userId);
   const roomId = useSelector((state: RootState) => state.session.sessions.selectedRoomId);
-  const inputMessageRef = useRef<InputRef>(null);
+  // const inputMessageRef = useRef<InputRef>(null);
   const chatroomData: chatroom = useSelector((state: RootState) => {
     const idx = state.chatroom.roomProfile.rooms.findIndex((room: chatroom) => {
       return room.roomId === roomId;
@@ -28,6 +28,7 @@ const Chatroom: React.FC = () => {
     return state.chatroom.roomProfile.rooms[idx];
   });
   const [wsClient, setWsClient] = useState<Client>(() => new Client());
+  const [inputMessage, setInputMessage] = useState<string>("");
   const listRef = useRef<List>(null);
 
   useEffect(() => {
@@ -90,7 +91,8 @@ const Chatroom: React.FC = () => {
     const opponent = chatroomData.users.find(user => user.userId !== userId);
     let message: message = {
       messageId: '',
-      content: inputMessageRef.current?.input?.value ?? '',
+      // content: inputMessageRef.current?.input?.value ?? '',
+      content: inputMessage,
       fromUser: {
         userId: userId,
         name: me?.name ?? '',
@@ -111,11 +113,28 @@ const Chatroom: React.FC = () => {
       time: new Date()
     }
     sendMessage(message);
+    setInputMessage("");
+  }
 
-    // clear and focus the input
-    if (inputMessageRef?.current?.input) {
-      inputMessageRef.current.input.value = '';
-      inputMessageRef.current.focus();
+  var offset = 25;
+  const getItemHeight = (index: any) => {
+    console.log("index: " + index);
+    if (index === 0) {
+      const firstMsg = chatroomData?.messages?.[0];
+      if (firstMsg) {
+        offset = Math.ceil((firstMsg.content.length / 75)) * 25;
+      }
+    }
+    const message = chatroomData?.messages?.[index];
+    if (message) {
+      const numLines = Math.ceil(message.content.length / 75);
+      console.log("msg: " + message.content);
+      console.log(numLines);
+      console.log(numLines * 25 + offset);
+      return ((numLines * 25) + offset);
+    } else {
+      console.log("Message not found");
+      return 0;
     }
   }
 
@@ -145,7 +164,7 @@ const Chatroom: React.FC = () => {
           ref={listRef}
           height={window.innerHeight * 0.8}
           itemCount={chatroomData.messages.length}
-          itemSize={50}
+          itemSize={getItemHeight}
           width='100%'
           initialScrollOffset={(chatroomData.messages.length - 1) * 120}
         >
@@ -157,6 +176,8 @@ const Chatroom: React.FC = () => {
                   ...style,
                   display: 'flex',
                   justifyContent: message.fromUser.userId === userId ? 'flex-end' : 'flex-start',
+                  height: 'auto',
+                  margin: '20px 0',
                 }}
               >
                 <div
@@ -206,9 +227,11 @@ const Chatroom: React.FC = () => {
           </Col>
           <Col span={18}>
             <Input
-              ref={inputMessageRef}
+              // ref={inputMessageRef}
+              value={inputMessage}
               placeholder='Type a message'
               size='large'
+              onChange={(e) => setInputMessage(e.target.value)}
               onPressEnter={handleSendMessage}
             />
           </Col>
