@@ -51,7 +51,7 @@ const AddUserModal: React.FC<AddUserModalProps> = (props) => {
   return (
     <Modal title="Add Friend" open={modalOpen} onCancel={toggleModal} footer={null}>
       <Space.Compact style={{ width: '100%' }}>
-        <Input placeholder="User ID" ref={friendIdRef} />
+        <Input placeholder="User ID" onPressEnter={handleAddFriend} ref={friendIdRef} />
         <Button type="primary" onClick={handleAddFriend}>add</Button>
       </Space.Compact>
     </Modal>

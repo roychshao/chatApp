@@ -28,15 +28,19 @@ const RoomList: React.FC = () => {
         dataSource={roomProfile.rooms}
         header={<div>Room List</div>}
         style={{ width: '100%' }}
-        renderItem={(room) => (
-          <List.Item onClick={() => dispatch(setSelectedRoomId(room.roomId)) }>
-            <List.Item.Meta
-              avatar={getFriendGender(room) === "male" ? <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=25" /> : <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=44" />}
-              title={room.roomName}
-              description={room.messages.length > 0 ? room.messages[room.messages.length - 1].content : ''}
-            />
-          </List.Item>
-        )}>
+        renderItem={(room) => {
+          const lastMessage = room.messages.length > 0 ? room.messages[room.messages.length - 1].content : '';
+          const maxLength = 44;
+          return (
+            <List.Item onClick={() => dispatch(setSelectedRoomId(room.roomId)) }>
+              <List.Item.Meta
+                avatar={getFriendGender(room) === "male" ? <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=25" /> : <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=44" />}
+                title={room.roomName}
+                description={lastMessage.length > maxLength ? `${lastMessage.slice(0, maxLength)}...` : lastMessage}
+              />
+            </List.Item>
+          )
+        }}>
       </List>
     </div>
   );

@@ -3,15 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
 import { RootState } from '../../store';
 import { Input, Button, Layout,
-  Row, Col, Avatar, 
-  /*InputRef,*/ Flex } from 'antd';
+  Row, Col, Avatar, Flex } from 'antd';
 import { FileAddOutlined } from '@ant-design/icons';
 import { getChatroomById, appendMessage } from '../../store/slice/chatroomSlice';
 import { chatroom } from '../../types/chatroom';
 import { message } from '../../types/message';
 import { Header } from 'antd/es/layout/layout';
-// import { FixedSizeList as List } from "react-window";
 import { VariableSizeList as List } from "react-window";
+import AutoSizer, { Size as AutoSize } from "react-virtualized-auto-sizer";
 
 const { Footer, Content } = Layout;
 
@@ -20,7 +19,8 @@ const Chatroom: React.FC = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.session.sessions.userId);
   const roomId = useSelector((state: RootState) => state.session.sessions.selectedRoomId);
-  // const inputMessageRef = useRef<InputRef>(null);
+  const rowHeights = useRef<any>({});
+
   const chatroomData: chatroom = useSelector((state: RootState) => {
     const idx = state.chatroom.roomProfile.rooms.findIndex((room: chatroom) => {
       return room.roomId === roomId;
@@ -112,30 +112,22 @@ const Chatroom: React.FC = () => {
       chatroom: chatroomData,
       time: new Date()
     }
+    // NOTE: if the charactor is more than 255, trigger a warning.
+    if (message.content.length <= 255) {
+      console.warn("The message length longer than 255.")
+    }
+
     sendMessage(message);
     setInputMessage("");
   }
 
-  var offset = 25;
-  const getItemHeight = (index: any) => {
-    console.log("index: " + index);
-    if (index === 0) {
-      const firstMsg = chatroomData?.messages?.[0];
-      if (firstMsg) {
-        offset = Math.ceil((firstMsg.content.length / 75)) * 25;
-      }
-    }
-    const message = chatroomData?.messages?.[index];
-    if (message) {
-      const numLines = Math.ceil(message.content.length / 75);
-      console.log("msg: " + message.content);
-      console.log(numLines);
-      console.log(numLines * 25 + offset);
-      return ((numLines * 25) + offset);
-    } else {
-      console.log("Message not found");
-      return 0;
-    }
+  const getItemHeight = (index: number) => {
+    return rowHeights.current[index] + 8 || 82;
+  }
+  
+const setItemHeight = (index: any, size: any) => {
+    listRef.current?.resetAfterIndex(0);
+    rowHeights.current = { ... rowHeights.current, [index]: size };
   }
 
   useEffect(() => {
@@ -160,61 +152,76 @@ const Chatroom: React.FC = () => {
           height: '80vh'
         }}
       >
-        <List
-          ref={listRef}
-          height={window.innerHeight * 0.8}
-          itemCount={chatroomData.messages.length}
-          itemSize={getItemHeight}
-          width='100%'
-          initialScrollOffset={(chatroomData.messages.length - 1) * 120}
-        >
-          {({ index, style }) => {
-            const message = chatroomData.messages[index];
-            return (
-              <div
-                style={{
-                  ...style,
-                  display: 'flex',
-                  justifyContent: message.fromUser.userId === userId ? 'flex-end' : 'flex-start',
-                  height: 'auto',
-                  margin: '20px 0',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: message.fromUser.userId === userId ? 'row-reverse' : 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Avatar 
-                    src={message.fromUser.gender === 'male' ? 
-                      "https://api.dicebear.com/7.x/miniavs/svg?seed=25" : 
-                      "https://api.dicebear.com/7.x/miniavs/svg?seed=44"
-                    } 
-                    style={{ marginRight: '8px', marginLeft: '8px' }}
-                  />
+        <AutoSizer>
+          {({ height, width }: AutoSize) => (
+            <List
+              ref={listRef}
+              height={height}
+              itemCount={chatroomData.messages.length}
+              itemSize={getItemHeight}
+              width={width}
+              initialScrollOffset={(chatroomData.messages.length - 1) * 120}
+            >
+              {({ index, style }) => {
+                
+                const message = chatroomData.messages[index];
+                const itemRef = useRef<any>({});
+
+                useEffect(() => {
+                  if (itemRef.current) {
+                    setItemHeight(index, itemRef.current.clientHeight);
+                  }
+                }, [itemRef])
+                
+                return (
                   <div
-                    style={message.fromUser.userId === userId ? {
-                      padding: '10px 20px',
-                      backgroundColor: '#add8e6',
-                      borderRadius: '20px',
-                      maxWidth: '80%',
-                      margin: '5px 0',
-                    } : {
-                      padding: '10px 20px',
-                      backgroundColor: '#ffe4b5',
-                      borderRadius: '20px',
-                      maxWidth: '80%',
-                      margin: '5px 0',
-                    }}>
-                    {message.content}
+                    style={{
+                      ...style,
+                      display: 'flex',
+                      justifyContent: message.fromUser.userId === userId ? 'flex-end' : 'flex-start',
+                      height: 'auto',
+                      margin: '20px 0',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: message.fromUser.userId === userId ? 'row-reverse' : 'row',
+                        alignItems: 'center',
+                        maxWidth: '70%',
+                      }}
+                    >
+                      <Avatar 
+                        src={message.fromUser.gender === 'male' ? 
+                          "https://api.dicebear.com/7.x/miniavs/svg?seed=25" : 
+                          "https://api.dicebear.com/7.x/miniavs/svg?seed=44"
+                        } 
+                        style={{ marginRight: '8px', marginLeft: '8px' }}
+                      />
+                      <div
+                        ref={itemRef}
+                        style={message.fromUser.userId === userId ? {
+                          padding: '10px 20px',
+                          backgroundColor: '#add8e6',
+                          borderRadius: '20px',
+                          maxWidth: '80%',
+                          margin: '5px 0',
+                        } : {
+                            padding: '10px 20px',
+                            backgroundColor: '#ffe4b5',
+                            borderRadius: '20px',
+                            maxWidth: '80%',
+                            margin: '5px 0',
+                          }}>
+                        {message.content}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          }}
-        </List>
+                );
+              }}
+            </List>
+          )}
+        </AutoSizer>
       </Content>
       <Footer
         style={{
