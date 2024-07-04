@@ -2,10 +2,14 @@ import React, { useEffect } from 'react';
 import { Form, Input, Button, Flex } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
-import { signin } from '../../store/slice/userSlice';
-import { user } from './../../types/user';
+import { signin, register } from '../../store/slice/userSlice';
 import { setUserId, setGender } from '../../store/slice/sessionSlice';
+import { createChatroom } from '../../store/slice/chatroomSlice';
+import { user } from './../../types/user';
+import { chatroom } from '../../types/chatroom';
+import axios from "axios";
 
 const Signin: React.FC = () => {
 
@@ -14,12 +18,53 @@ const Signin: React.FC = () => {
 
   const userProfile = useSelector((state: RootState) => state.user.profile);
 
-
   useEffect(() => {
     if (userProfile.userId && userProfile.name) {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
       dispatch(setUserId(userProfile.userId));
       dispatch(setGender(userProfile.gender));
+      
+      // register an ai assistant automatically once login and has no ai assistant.
+      const checkAssistant = async () => {
+        await axios.get(`http://localhost:8080/api/user/${userProfile.userId}-assistant`, {
+          withCredentials: true
+        }).catch(e => { 
+          if (e.response.status === 404) {
+            let aiAssistantData: user = {
+              userId: userProfile.userId + '-assistant',
+              name: "🤖 AI assistant",
+              age: 0,
+              gender: userProfile.gender,
+              email: '',
+              password: ''
+            }
+            dispatch(register(aiAssistantData))
+              .then(unwrapResult)
+              .then(() => {
+                // create AI chatroom
+                const chatroomData: chatroom = {
+                  roomId: "",
+                  roomName: "🤖 AI assistant",
+                  users: [
+                    {
+                      userId: userProfile.userId,
+                      name: "",
+                      age: 0,
+                      gender: "",
+                      email: "",
+                      password: "",
+                    },
+                    aiAssistantData,
+                  ],
+                  messages: []
+                }
+                dispatch(createChatroom(chatroomData));
+              })
+          }
+        })
+      }
+
+      checkAssistant();
       navigate('/home');
     }
   }, [userProfile, navigate]);

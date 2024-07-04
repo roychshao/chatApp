@@ -110,10 +110,11 @@ const Chatroom: React.FC = () => {
       chatroom: chatroomData,
       time: new Date()
     }
-    // NOTE: if the charactor is more than 255, trigger a warning.
+
     if (message.content.length <= 255) {
       console.warn("The message length longer than 255.")
     }
+
     sendMessage(message);
     setInputMessage("");
   }
@@ -129,7 +130,7 @@ const setItemHeight = (index: any, size: any) => {
 
   useEffect(() => {
     if (listRef.current) {
-      listRef.current.scrollToItem(chatroomData.messages.length - 1, 'end');
+      listRef.current.scrollToItem(chatroomData.messages.length, 'end');
     }
   }, [chatroomData.messages.length])
 
@@ -231,7 +232,6 @@ const setItemHeight = (index: any, size: any) => {
           </Col>
           <Col span={18}>
             <Input
-              // ref={inputMessageRef}
               value={inputMessage}
               placeholder='Type a message'
               size='large'

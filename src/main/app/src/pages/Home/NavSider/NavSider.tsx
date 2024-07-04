@@ -31,10 +31,15 @@ const NavSider: React.FC<NavSiderProps> = (props) => {
     <div>
       <Layout>
         <Sider
-          trigger={null}
-          collapsible
-          collapsed={false}
           width={350}
+          breakpoint='lg'
+          collapsedWidth={200}
+          onBreakpoint={(broken) => {
+            console.log(broken);
+          }}
+          onCollapse={(collapsed, type) => {
+            console.log(collapsed, type);
+          }}
           style={{ overflow: 'auto', backgroundColor: 'white', paddingLeft: '10px', borderRight: '3px solid #f0f0f0' }}>
           {selectedKey === '1' ? <User /> : null}
           {selectedKey === '2' ? <RoomList /> : null}

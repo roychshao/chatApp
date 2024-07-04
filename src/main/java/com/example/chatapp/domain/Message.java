@@ -11,6 +11,7 @@ public class Message {
 
     @Id
     private String messageId;
+    @Column(length = 1000)
     private String content;
 
     @ManyToOne

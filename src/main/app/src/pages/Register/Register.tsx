@@ -55,7 +55,6 @@ const Register: React.FC = () => {
           dispatch(createChatroom(chatroomData));
         })
       
-
       navigate('/home');
     }
   }, [userProfile, navigate]);
