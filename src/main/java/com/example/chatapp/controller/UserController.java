@@ -2,6 +2,9 @@ package com.example.chatapp.controller;
 
 import java.util.List;
 import com.example.chatapp.domain.User;
+
+import io.micrometer.common.util.StringUtils;
+
 import org.springframework.web.bind.annotation.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -117,13 +120,17 @@ public class UserController {
     @Transactional
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User createUser) {
-        
-        User newUser = new User(createUser.getName(), createUser.getGender(), createUser.getAge(), createUser.getEmail(), createUser.getPassword());
-
+     
         try {
-            em.persist(newUser);
-
-            return ResponseEntity.ok(newUser);
+            if (StringUtils.isNotEmpty(createUser.getUserId())) {
+                User newUser = new User(createUser.getUserId(), createUser.getName(), createUser.getGender(), createUser.getAge(), createUser.getEmail(), createUser.getPassword());
+                em.persist(newUser);
+                return ResponseEntity.ok(newUser);
+            } else {
+                User newUser = new User(createUser.getName(), createUser.getGender(), createUser.getAge(), createUser.getEmail(), createUser.getPassword());
+                em.persist(newUser);
+                return ResponseEntity.ok(newUser);
+            }
         } catch (Exception e) {
             logger.error("register:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

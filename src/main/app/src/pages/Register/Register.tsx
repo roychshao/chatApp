@@ -2,10 +2,13 @@ import React, { useEffect } from 'react';
 import { Form, Input, Button, Flex, InputNumber, Radio } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { register } from '../../store/slice/userSlice';
-import { user } from '../../types/user';
 import { setUserId, setGender } from '../../store/slice/sessionSlice';
+import { createChatroom } from '../../store/slice/chatroomSlice';
+import { user } from '../../types/user';
+import { chatroom } from '../../types/chatroom';
 
 const Register: React.FC = () => {
 
@@ -19,6 +22,40 @@ const Register: React.FC = () => {
       console.log("register successfully and get user profile, userId: ", userProfile.userId);
       dispatch(setUserId(userProfile.userId));
       dispatch(setGender(userProfile.gender));
+
+      // register an ai assistant automatically once an account is registered.
+      let aiAssistantData: user = {
+        userId: userProfile.userId + '-assistant',
+        name: "🤖 AI assistant",
+        age: 0,
+        gender: userProfile.gender,
+        email: '',
+        password: ''
+      }
+      dispatch(register(aiAssistantData))
+        .then(unwrapResult)
+        .then(() => {
+          // create AI chatroom
+          const chatroomData: chatroom = {
+            roomId: "",
+            roomName: "🤖 AI assistant",
+            users: [
+              {
+                userId: userProfile.userId,
+                name: "",
+                age: 0,
+                gender: "",
+                email: "",
+                password: "",
+              },
+              aiAssistantData,
+            ],
+            messages: []
+          }
+          dispatch(createChatroom(chatroomData));
+        })
+      
+
       navigate('/home');
     }
   }, [userProfile, navigate]);

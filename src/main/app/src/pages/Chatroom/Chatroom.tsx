@@ -57,7 +57,7 @@ const Chatroom: React.FC = () => {
       subscriptionId = client.subscribe(`/topic/${roomId}/messages`, (message) => {
         console.log('Received: ' + message.body);
         const body = JSON.parse(message.body);
-        dispatch(appendMessage({roomId,body}));
+        dispatch(appendMessage({roomId, body}));
       });
     };
 
@@ -84,14 +84,12 @@ const Chatroom: React.FC = () => {
     wsClient.publish({ destination: `/socket/${roomId}/messages`, body: JSON.stringify(messageContent)});
   };
 
-
   const handleSendMessage = () => {
     // send message
     const me = chatroomData.users.find(user => user.userId === userId);
     const opponent = chatroomData.users.find(user => user.userId !== userId);
     let message: message = {
       messageId: '',
-      // content: inputMessageRef.current?.input?.value ?? '',
       content: inputMessage,
       fromUser: {
         userId: userId,
@@ -116,7 +114,6 @@ const Chatroom: React.FC = () => {
     if (message.content.length <= 255) {
       console.warn("The message length longer than 255.")
     }
-
     sendMessage(message);
     setInputMessage("");
   }

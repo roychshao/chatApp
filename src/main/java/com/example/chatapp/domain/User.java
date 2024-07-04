@@ -43,6 +43,16 @@ public class User {
     public User() {
     }
 
+    // the needs for specify user id, ex: ai assistant
+    public User(String i, String n, String g, int a, String e, String p) {
+        setName(n);
+        setGender(g);
+        setAge(a);
+        setUserId(i);
+        setEmail(e);
+        setPassword(p);
+    }
+
     public User(String n, String g, int a, String e, String p) {
         setName(n);
         setGender(g);

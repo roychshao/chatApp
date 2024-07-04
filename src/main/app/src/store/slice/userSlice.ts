@@ -23,6 +23,7 @@ const initialState = {
 
 export const register:any = createAsyncThunk("user/register", async (userData: user) => {
   const res = await axios.post("http://localhost:8080/api/user/register", {
+    userId: userData.userId,
     name: userData.name,
     age: userData.age,
     gender: userData.gender,

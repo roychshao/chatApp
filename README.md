@@ -22,11 +22,14 @@ I mainly used this project to become familiar with Spring-boot development techn
 ![code quality](./screen/SonarQube0519.png)
 
 ## Screen Displayed
+* chat with a normal person
 ![demo screen](./screen/chatapp.png)
+* chat with AI
+![chat with ai](./screen/AI.png)
 
 ## Future Works
 The future works may contains below functions or skills but uncertainly:
-* use langchain to do a chat ai in a chatroom
+* use langchain to do a chat ai in a chatroom (done)
 * frontend unit tests
 * use OpenTelemetry to get the telemetry of this app
 * use Jenkins to run CI
@@ -47,6 +50,10 @@ The future works may contains below functions or skills but uncertainly:
 
 #### Database
 * H2 database
+
+#### LLM
+* Langchain4j
+* ollama + orca-mini
 
 #### Test
 * JUnit
