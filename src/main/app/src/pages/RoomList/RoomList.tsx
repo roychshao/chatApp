@@ -26,7 +26,6 @@ const RoomList: React.FC = () => {
       <List
         itemLayout='horizontal'
         dataSource={roomProfile.rooms}
-        header={<div>Room List</div>}
         style={{ width: '100%' }}
         renderItem={(room) => {
           const lastMessage = room.messages.length > 0 ? room.messages[room.messages.length - 1].content : '';
