@@ -1,28 +1,28 @@
 package com.example.chatapp.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.nio.charset.StandardCharsets;
-import java.math.BigInteger;
-import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "_User")
 public class User {
-
     @Id
     @Column(name = "USERID")
     private String userId;
+
     private String name;
     private String gender;
     private String email;
     private String password;
     private int age;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
         name = "user_friends",
         joinColumns = @JoinColumn(name = "userId"),
@@ -40,8 +40,7 @@ public class User {
     @OneToMany(mappedBy = "toUser")
     private List<Message> messageTo = new ArrayList<>();
 
-    public User() {
-    }
+    public User() {}
 
     // the needs for specify user id, ex: ai assistant
     public User(String i, String n, String g, int a, String e, String p) {

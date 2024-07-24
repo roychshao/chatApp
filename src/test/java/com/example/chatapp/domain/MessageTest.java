@@ -1,8 +1,9 @@
 package com.example.chatapp.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Date;
+import org.junit.jupiter.api.Test;
 
 class MessageTest {
 
@@ -15,7 +16,13 @@ class MessageTest {
         Date date = new Date();
 
         // Create a message
-        Message message = new Message("Hello", chatroom, fromUser, toUser, date);
+        Message message = new Message(
+            "Hello",
+            chatroom,
+            fromUser,
+            toUser,
+            date
+        );
 
         // Test getters
         assertNotNull(message.getId());

@@ -1,41 +1,52 @@
 package com.example.chatapp.domain;
 
-import java.util.UUID;
-import java.util.Date;
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "_Message")
 public class Message {
-
     @Id
     private String messageId;
+
     @Column(length = 1000)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "fromUserId", referencedColumnName = "userId", nullable = true)
+    @JoinColumn(
+        name = "fromUserId",
+        referencedColumnName = "userId",
+        nullable = true
+    )
     private User fromUser;
 
-	@ManyToOne
-    @JoinColumn(name = "toUserId", referencedColumnName = "userId", nullable = true)
+    @ManyToOne
+    @JoinColumn(
+        name = "toUserId",
+        referencedColumnName = "userId",
+        nullable = true
+    )
     private User toUser;
 
-	@ManyToOne
-    @JoinColumn(name = "chatroomId", referencedColumnName = "roomId", nullable = true)
+    @ManyToOne
+    @JoinColumn(
+        name = "chatroomId",
+        referencedColumnName = "roomId",
+        nullable = true
+    )
     @JsonBackReference
     private Chatroom chatroom;
 
-	private Date time;
+    private Date time;
 
-    public Message () {
-    }
+    public Message() {}
 
-    public Message (String m, Chatroom c, User f, User t, Date d) {
+    public Message(String m, Chatroom c, User f, User t, Date d) {
         messageId = UUID.randomUUID().toString();
         setContent(m);
-        setChatroom(c); 
+        setChatroom(c);
         setFromUser(f);
         setToUser(t);
         setTime(d);

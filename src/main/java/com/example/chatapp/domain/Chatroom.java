@@ -1,15 +1,14 @@
 package com.example.chatapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.UUID;
 
 @Entity
 @Table(name = "_Chatroom")
 public class Chatroom {
-
     @Id
     private String roomId;
 
@@ -27,8 +26,7 @@ public class Chatroom {
     )
     private List<User> users = new ArrayList<>();
 
-    public Chatroom() {
-    }
+    public Chatroom() {}
 
     public Chatroom(String n) {
         setRoomId(UUID.randomUUID().toString());
