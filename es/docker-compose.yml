@@ -1,0 +1,45 @@
+version: '3.8'
+
+networks:
+  elastic-net:
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:sha256-fece07406ca82f04df4f321b9a17500c48c0123d7e09895cc3f8ecb30c18946f
+    container_name: elasticsearch
+    networks:
+      - elastic-net
+    ports:
+      - "127.0.0.1:9200:9200"
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - discovery.type=single-node
+      - xpack.security.http.ssl.enabled=false
+      - xpack.license.self_generated.type=trial
+    volumes:
+      - ./exportENV.sh:/usr/local/bin/exportENV.sh
+    command: /bin/sh -c "/usr/local/bin/exportENV.sh && /usr/local/bin/docker-entrypoint.sh"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:sha256-ffb14d8c0f317b0172924a88d27e4de776e86f54228880861207dc0909fa053f
+    container_name: kibana
+    networks:
+      - elastic-net
+    depends_on:
+      - elasticsearch
+    command: >
+      /bin/sh -c "
+      until curl -u elastic:${ELASTIC_PASSWORD} -X POST http://elasticsearch:9200/_security/user/kibana_system/_password -d '{\"password\":\"${KIBANA_PASSWORD}\"}' -H 'Content-Type: application/json'; do
+        echo 'Waiting for Elasticsearch to be ready...';
+        sleep 5;
+      done;
+      kibana"
+    ports:
+      - "127.0.0.1:5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - xpack.security.enabled=false
+      - xpack.license.self_generated.type=trial

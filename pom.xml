@@ -99,6 +99,13 @@
             <version>1.19.8</version>
             <scope>compile</scope>
             </dependency>
+        <!-- https://mvnrepository.com/artifact/co.elastic.apm/apm-agent-attach -->
+        <dependency>
+            <groupId>co.elastic.apm</groupId>
+            <artifactId>apm-agent-attach</artifactId>
+            <version>1.51.0</version>
+            <scope>provided</scope>
+            </dependency>
         </dependencies>
 
     <build>

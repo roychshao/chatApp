@@ -1,0 +1,2 @@
+FROM docker.elastic.co/apm/apm-server:sha256-fdb5c561bb8f3e1cb6f6298d50f4a19260c1c6ec14950a34fa2aadb25d039124
+COPY --chmod=0644 --chown=1000:1000 apm-server.docker.yml /usr/share/apm-server/apm-server.yml
